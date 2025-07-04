@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+
 
  {/*Instead of direct change can just add class name to make change in header ex.*/}
 interface HeaderProps {
@@ -24,8 +26,15 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo, flex-shrink-0 prevents shrinking when in flex containter*/}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
-              Logo
+            <Link href="/">
+              <Image
+                src="/LOGOA.png"
+                alt="Site Logo"
+                width={65}
+                height={65}
+                priority
+                className="hover:opacity-80 transition-opacity"
+              />
             </Link>
           </div>
 
