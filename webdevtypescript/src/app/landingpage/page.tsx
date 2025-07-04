@@ -1,17 +1,10 @@
-import Head from 'next/head'
-import Layout from '../layout'
+import Header from '../Components/header';
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <Layout>
-      <Head>
-        <title>Welcome to My Site</title>
-        <meta name="description" content="Next.js + TypeScript website" />
-      </Head>
-      <main>
-        <h1>Hello World</h1>
-        <p>landing page built with Next.js and TypeScript.</p>
-      </main>
-    </Layout>
-  )
+    <div>
+      <Header />
+      {/* Rest of your landing page content */}
+    </div>
+  );
 }
