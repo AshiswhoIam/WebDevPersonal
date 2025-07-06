@@ -1,4 +1,4 @@
 // src/app/page.tsx
-import LandingPage from "./landingpage/page";
+import LandingPage from "./Landingpage/page";
 
 export default LandingPage;
