@@ -1,7 +1,7 @@
 import Header from '../Components/header';
 import Footer from '../Components/footer';
 import React from 'react';
-
+import styles from './LandingPage.module.css';
 
 const LandingPage: React.FC = () => {
   return (
@@ -89,7 +89,6 @@ const LandingPage: React.FC = () => {
             muted
             playsInline
           />
-        
           {/* Content Container z-index */}
           <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
@@ -119,8 +118,7 @@ const LandingPage: React.FC = () => {
                     </div>
                 </a>
               <p className="mt-4 text-gray-700 text-center p-4">Different Ai Models that I've developed overtime. Currently( Img classifier & Expression Classifer) .</p>
-              </div>
-              
+              </div>       
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
                 <a href="/" className="block relative">
                   <img src="/ChessImg.png" alt="Capstone Development" className="w-full h-64 object-contain bg-gray-900" />
@@ -134,20 +132,19 @@ const LandingPage: React.FC = () => {
           </div>
         </section>
         {/* Section 4 bg with centered text */}
-        <section className="py-54 bg-[url('/S4Main.png')] bg-cover bg-center bg-no-repeat">
+        <section className="py-54 bg-[url('/S4Main2.jpg')] bg-cover bg-center bg-no-repeat">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Top centered text */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h3 className={`text-3xl md:text-4xl font-bold mb-4 ${styles.heroText}`}>
                 Something I like to go by to go beyond my means
-              </h2>
+              </h3>
             </div> 
             {/* Center screen text */}
             <div className="text-center">
-              <h3 className="text-2xl md:text-3xl font-semibold text-white mb-6">
+              <h1 className={`text-2xl md:text-3xl font-semibold mb-6 ${styles.quoteText}`}>
                 Discipline is doing what you hate to do, but doing it like you love it. -Mike Tyson
-              </h3>
-
+              </h1>
             </div>
           </div>
         </section>
