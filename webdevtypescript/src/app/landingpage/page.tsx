@@ -34,6 +34,50 @@ const LandingPage: React.FC = () => {
             </p>
           </div>
         </section>
+
+        {/* Section 2 just a general container*/}
+        <section className="relative py-20 overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute top-0 left-0 w-full h-full">
+            <img 
+              src="S2Main.png" 
+              alt="Background" 
+              className="w-full h-full object-cover"
+            />
+            {/* Optional overlay for better text readability */}
+            <div className="absolute top-0 left-0 w-full h-full bg-black/30" />
+          </div>
+          
+          {/* MainS2 Container */}
+          <div className="relative z-10 h-full">
+            <div className="flex items-center justify-start h-full min-h-[500px]">
+              {/* Left Side Text Container, width 100% of parent container, beccomes 50,40,33 on sizes thne just margings on diff screens */}
+              <div className="w-full md:w-1/2 lg:w-2/5 xl:w-1/3 mx-4 md:ml-8 md:mr-4 lg:ml-12 lg:mr-8 xl:ml-20 xl:mr-12">
+                 {/*backdrop blur is to add small effect on bg, depth for box...  */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-8 shadow-xl">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+                    Professional Summary
+                  </h2>
+                  {/* mb6 is bottom marning 1.5rem. leading relaxed sets line height for paragraphs to read.*/}
+                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                    I am a motivated and ambitious software engineering graduate with strong programming knowledge across 
+                    multiple technologies(Java, Python, React, Next.js, C++ and more). Adept at designing, developing, and 
+                    optimizing innovative software solutions. 
+                  </p>
+                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                    I am passionate about continuous learning and adaptable to 
+                    new technologies. Strong communicator with excellent collaboration skills, ensuring seamless 
+                    teamwork and efficient task execution.
+                  </p>
+                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    View My Acamdemics
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Section 3 */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
