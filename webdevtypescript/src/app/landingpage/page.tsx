@@ -100,7 +100,7 @@ const LandingPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/*group enables gp hover, round on large border, medium shadowing, hiden content that overflows, smooth trans, hover scale slighty make bigger on hover */}
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
-                <a href="/" className="block relative">
+                <a href="/Capstone" className="block relative">
                   <img src="/CapstoneImg.png" alt="Capstone Development" className="w-full h-64 object-cover" />
                     {/* inset sets t,r,b,k to 0,parent fills, opac for transparent, when group hover then opac, */}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
