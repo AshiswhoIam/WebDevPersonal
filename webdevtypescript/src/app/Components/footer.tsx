@@ -61,12 +61,12 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
                 </Link>
               </li>
               <li>
-                <Link href="/academics" className="text-gray-300 hover:text-white transition-colors">
+                <Link href="/Academics" className="text-gray-300 hover:text-white transition-colors">
                   Academics
                 </Link>
               </li>
               <li>
-                <Link href="/capstone" className="text-gray-300 hover:text-white transition-colors">
+                <Link href="/Capstone" className="text-gray-300 hover:text-white transition-colors">
                   Capstone
                 </Link>
               </li>

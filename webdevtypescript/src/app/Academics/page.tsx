@@ -1,0 +1,164 @@
+import React from 'react';
+import Header from '../Components/header';
+import Footer from '../Components/footer';
+
+const Academics: React.FC = () => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <Header />
+      
+      {/* Main Content */}
+      <main className="flex-1">
+        {/* First Section - 60/40 Split */}
+        <section className="h-96 flex">
+          {/* Left Side - 60% Text Content */}
+          <div className="w-3/5 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-8">
+            <div className="max-w-2xl">
+              <h6 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+                Degrees:
+              </h6>
+              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                Bachelor of Engineering in Software Engineering at Concordia University                 
+              </p>
+              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                DEC in Pure and Applied Sciences at Vanier College
+              </p>
+            </div>
+          </div>
+          
+          {/* Right Side 40% Background Image */}
+          <div className="w-2/5 relative overflow-hidden">
+            <img 
+              src="/Acad.png" 
+              alt="Academic Background" 
+              className="w-full h-full object-cover"
+            />
+            {/* Optional overlay for visual effect */}
+            <div className="absolute inset-0 bg-black/10"></div>
+          </div>
+        </section>
+        {/* Section 2 Academic Details */}
+        <section className="py-16 bg-gray-100">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Name */}
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-6">
+              Software Engineering Program
+            </h2>
+            
+            {/* Description */}
+            <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
+              Comprehensive four-year program focusing on software development, system design, 
+              and engineering principles. Emphasis on practical application through projects 
+              and collaborative learning experiences.
+            </p>
+            
+            {/* Two Columns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {/* Left Column */}
+              <div className="bg-white rounded-lg p-6 shadow-md">
+                
+                <div className="space-y-2">
+                  <p className="text-gray-700">COMP 232 Mathematics for Computer Science</p>
+                  <p className="text-gray-700">COMP 248 Object-Oriented Programming I</p>
+                  <p className="text-gray-700">ENGR 201 Professional Practice and Responsibility</p>
+                  <p className="text-gray-700">GEOG 2XX General Education Elective  </p>
+                  <p className="text-gray-700">COMP 249 Object-Oriented Programming II</p>
+                  <p className="text-gray-700">ENGR 233 Applied Advanced Calculus </p>
+                  <p className="text-gray-700">SOEN 228 System Hardware </p>
+                  <p className="text-gray-700">SOEN 287 Web Programming</p>
+                  <p className="text-gray-700">PHYS 284 Engineering and Natural Science Group</p>
+                  <p className="text-gray-700">COMP 348 Principles of Programming Languages </p>
+                  <p className="text-gray-700">COMP 352 Data Structures and Algorithms </p>
+                  <p className="text-gray-700">ENCS 282 Technical Writing and Communication</p>
+                  <p className="text-gray-700">ENGR 202 Sustainable Development and Environmental Stewardship</p>
+                  <p className="text-gray-700">SOEN 341 Software Process and Practices </p>
+                  <p className="text-gray-700">COMP 346 Operating Systems</p>
+                  <p className="text-gray-700">ELEC 275 Principles of Electrical Engineering</p>
+                  <p className="text-gray-700">ENGR 371 Probability and Statistics in Engineering</p>
+                  <p className="text-gray-700">SOEN 331 Formal Methods for Software Engineering</p>
+                  <p className="text-gray-700">COMP 345 Advanced Program Design with C++</p>
+                </div>
+              </div>
+              
+              {/* Right Column */}
+              <div className="bg-white rounded-lg p-6 shadow-md">
+                
+                <div className="space-y-2">
+                  <p className="text-gray-700">COMP 335 Introduction to Theoretical Computer Science</p>
+                  <p className="text-gray-700">ENGR 391 Numerical Methods in Engineering</p>
+                  <p className="text-gray-700">SOEN 342 Software Requirements and Deployment</p>
+                  <p className="text-gray-700">SOEN 343 Software Architecture and Design </p>
+                  <p className="text-gray-700">SOEN 384 Management, Measurement and Quality Control </p>
+                  <p className="text-gray-700">SOEN 363 Data Systems for Software Engineer</p>
+                  <p className="text-gray-700">SOEN 345 Software Testing, Verification and Quality Assurance</p>
+                  <p className="text-gray-700">SOEN 357 User Interface Design</p>
+                  <p className="text-gray-700">SOEN 390 Software Engineering Team Design Project</p>
+                  <p className="text-gray-700">SOEN 385 Control Systems and Applications </p>
+                  <p className="text-gray-700">ENGR 301 Engineering Management Principles and Economics  </p>
+                  <p className="text-gray-700">SOEN 321 Information Systems Security  </p>
+                  <p className="text-gray-700">ENGR 392 Impact of Technology on Society </p>
+                  <p className="text-gray-700">COMP 472 Artificial Intelligence </p>
+                  <p className="text-gray-700">SOEN 387 Web‑Based Enterprise Application Design </p>
+                  <p className="text-gray-700">SOEN 490 Capstone Software Engineering Design Project  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Skills Section */}
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Technical Skills Acquired</h3>
+              <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+                Through rigorous coursework and hands-on projects, I have developed proficiency in 
+                multiple programming languages including Java, Python, JavaScript, C++, and TypeScript. 
+                Additionally, I have gained experience with frameworks like React, Next.js, Spring Boot, 
+                and various database technologies including SQL and NoSQL systems.
+              </p>
+            </div>
+          </div>
+        </section>
+        {/* Section 3 */}
+        <section className="relative py-16 bg-[url('/AcadS3.png')] bg-cover bg-center bg-no-repeat">
+          {/* overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/30"></div>
+          
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Top Middle Text */}
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+              Academic Projects
+            </h2>
+            
+            {/* 4 Rectangles at Center - 2 per row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {/* Rectangle 1 */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">
+                
+                <p className="text-gray-700 font-medium">SQL</p>
+              </div>
+              
+              {/* Rectangle 2 */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">              
+                <p className="text-gray-700 font-medium">Capstone</p>
+              </div>
+              
+              {/* Rectangle 3 */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">
+                <p className="text-gray-700 font-medium">JAVA</p>
+              </div>
+              
+              {/* Rectangle 4 */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">               
+                <p className="text-gray-700 font-medium">AiDevelopment</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
+
+export default Academics;
