@@ -11,7 +11,7 @@ const Capstone: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1">
         {/* Section 1 */}
-        <section className="relative h-96 bg-[url('/capstone-bg.jpg')] bg-cover bg-center bg-no-repeat">
+        <section className="relative h-96 bg-[url('/CapstoneBg.jpg')] bg-cover bg-center bg-no-repeat">
           {/*overlay for better text readability */}
           <div className="absolute inset-0 bg-black/40"></div>
           
@@ -32,17 +32,18 @@ const Capstone: React.FC = () => {
           </div>
         </section>
         {/* Section 2 */}
-        <section className="py-16 bg-gray-100">
+        <section className="py-16 bg-gradient-to-br from-black via-red-900 to-black text-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Name */}
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-6">
               Capstone Development
             </h2>
             
             {/* Description */}
-            <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-white text-center mb-12 max-w-3xl mx-auto leading-relaxed">
               Heres some of my contributions to the development of the web application.
             </p>
+
             
             {/* Two Columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -72,7 +73,7 @@ const Capstone: React.FC = () => {
           </div>
         </section>
         {/* Section 3  */}
-        <section className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-20 px-6">
+        <section className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 py-20 px-6">
           <div className="max-w-7xl mx-auto">
             {/* Header Text  */}
             <div className="mb-16">

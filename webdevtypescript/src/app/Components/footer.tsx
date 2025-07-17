@@ -71,7 +71,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
                 </Link>
               </li>
               <li>
-                <Link href="/ai" className="text-gray-300 hover:text-white transition-colors">
+                <Link href="/AiModel" className="text-gray-300 hover:text-white transition-colors">
                   Ai Model
                 </Link>
               </li>

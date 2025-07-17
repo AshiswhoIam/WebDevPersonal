@@ -70,7 +70,7 @@ const LandingPage: React.FC = () => {
                     teamwork and efficient task execution.
                   </p>
                   <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    View My Acamdemics
+                    View My Academics
                   </button>
                 </div>
               </div>
@@ -111,7 +111,7 @@ const LandingPage: React.FC = () => {
               </div>
 
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
-                <a href="/" className="block relative">
+                <a href="/AiModel" className="block relative">
                   <img src="/AiImg.png" alt="Ai Development" className="w-full h-64 object-cover" />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <h3 className="text-white text-xl font-semibold">Ai Model Development</h3>
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
               <p className="mt-4 text-gray-700 text-center p-4">Different Ai Models that I've developed overtime. Currently( Img classifier & Expression Classifer) .</p>
               </div>       
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
-                <a href="/" className="block relative">
+                <a href="/Chess" className="block relative">
                   <img src="/ChessImg.png" alt="Capstone Development" className="w-full h-64 object-contain bg-gray-900" />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <h3 className="text-white text-xl font-semibold">Chess</h3>

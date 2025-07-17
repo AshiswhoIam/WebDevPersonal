@@ -50,10 +50,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <Link href="/Capstone" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Capstone
             </Link>
-            <Link href="/ai" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link href="/AiModel" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Ai Model
             </Link>
-            <Link href="/chess" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link href="/Chess" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Chess
             </Link>
           </nav>
