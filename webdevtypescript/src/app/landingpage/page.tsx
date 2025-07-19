@@ -132,20 +132,18 @@ const LandingPage: React.FC = () => {
           </div>
         </section>
         {/* Section 4 bg with centered text */}
-        <section className="py-54 bg-[url('/S4Main2.jpg')] bg-cover bg-center bg-no-repeat">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Top centered text */}
-            <div className="text-center mb-16">
-              <h3 className={`text-3xl md:text-4xl font-bold mb-4 ${styles.heroText}`}>
-                Something I like to go by to go beyond my means
-              </h3>
-            </div> 
-            {/* Center screen text */}
-            <div className="text-center">
-              <h1 className={`text-2xl md:text-3xl font-semibold mb-6 ${styles.quoteText}`}>
-                Discipline is doing what you hate to do, but doing it like you love it. -Mike Tyson
-              </h1>
-            </div>
+        <section className="py-54 bg-[url('/S4Main2.png')] bg-cover bg-center bg-no-repeat relative">
+          {/* Subtle overlay for contrast */}
+          <div className="absolute inset-0 bg-black/50" />
+          {/* Content wrapper */}
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fadeIn">
+            <h3 className={`text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg ${styles.heroText}`}>
+              A principle I live by that pushes me beyond my limits
+            </h3>
+            <div className="w-24 h-1 bg-blue-500 mx-auto mb-6 opacity-75" />
+            <blockquote className={`text-xl md:text-2xl font-semibold italic text-white max-w-2xl mx-auto ${styles.quoteText}`}>
+              “Discipline is doing what you hate to do, but doing it like you love it.” <br /> — Mike Tyson
+            </blockquote>
           </div>
         </section>
       </main>
