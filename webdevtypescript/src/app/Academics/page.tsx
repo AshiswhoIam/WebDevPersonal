@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../Components/header';
 import Footer from '../Components/footer';
+import Link from 'next/link';
 
 const Academics: React.FC = () => {
   return (
@@ -11,33 +12,42 @@ const Academics: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1">
         {/* First Section - 60/40 Split */}
-        <section className="h-96 flex">
+        <section className="h-[28rem] flex flex-col md:flex-row">
           {/* Left Side - 60% Text Content */}
-          <div className="w-3/5 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-8">
+          <div className="md:w-3/5 w-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-8">
             <div className="max-w-2xl">
-              <h6 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                Degrees:
-              </h6>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Bachelor of Engineering in Software Engineering at Concordia University                 
-              </p>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                DEC in Pure and Applied Sciences at Vanier College
-              </p>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                🎓 Academic Background
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <span className="text-blue-600 text-xl font-bold mr-2">•</span>
+                  <p className="text-lg text-gray-800 leading-relaxed">
+                    Bachelor of Engineering in Software Engineering<br />
+                    <span className="text-sm text-gray-600">Concordia University</span>
+                  </p>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-blue-600 text-xl font-bold mr-2">•</span>
+                  <p className="text-lg text-gray-800 leading-relaxed">
+                    DEC in Pure and Applied Sciences<br />
+                    <span className="text-sm text-gray-600">Vanier College</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          
-          {/* Right Side 40% Background Image */}
-          <div className="w-2/5 relative overflow-hidden">
+          {/* Right Side - 40% Image */}
+          <div className="md:w-2/5 w-full relative overflow-hidden">
             <img 
               src="/Acad.png" 
               alt="Academic Background" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transform scale-105 transition-transform duration-1000 ease-in-out"
             />
-            {/* Optional overlay for visual effect */}
-            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="absolute inset-0 bg-black/20"></div>
           </div>
         </section>
+
         {/* Section 2 Academic Details */}
         <section className="py-16 bg-gray-100">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -110,9 +120,9 @@ const Academics: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Technical Skills Acquired</h3>
               <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
                 Through rigorous coursework and hands-on projects, I have developed proficiency in 
-                multiple programming languages including Java, Python, JavaScript, C++, and TypeScript. 
-                Additionally, I have gained experience with frameworks like React, Next.js, Spring Boot, 
-                and various database technologies including SQL and NoSQL systems.
+                multiple programming languages including Java, Python, JavaScript, C++, and more. 
+                Additionally, I have gained experience with frameworks like React, Next.js, Pytorch, 
+                and various database technologies including SQL, MongoDB and NoSQL systems.
               </p>
             </div>
           </div>
@@ -131,25 +141,36 @@ const Academics: React.FC = () => {
             {/* 4 Rectangles at Center - 2 per row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Rectangle 1 */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">
+              <Link href="/">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
+              hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
                 
                 <p className="text-gray-700 font-medium">SQL</p>
               </div>
+              </Link>
               
               {/* Rectangle 2 */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">              
+              <Link href="/Capstone">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
+              hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">              
                 <p className="text-gray-700 font-medium">Capstone</p>
               </div>
+              </Link>
               
               {/* Rectangle 3 */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">
+              <Link href="/">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
+              hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
                 <p className="text-gray-700 font-medium">JAVA</p>
               </div>
-              
+              </Link>
               {/* Rectangle 4 */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg">               
+              <Link href="/AiModel">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
+              hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">               
                 <p className="text-gray-700 font-medium">AiDevelopment</p>
               </div>
+              </Link>
             </div>
           </div>
         </section>

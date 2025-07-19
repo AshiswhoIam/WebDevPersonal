@@ -11,14 +11,14 @@ Figma: https://www.figma.com/design/Oue6aLV8GIcVbGH0HusoDB/WebDev?t=CUT8Mb3PL4e0
 
 Stuff to do:
 
-Lets fix ui stuff first real quick, then do the backend for login.
+Lets fix ui stuff first real quick,
+then do the backend for login.
 Then integrate
 
 
 
-First off need to fix the img landing page section 4,    
 
-Then fix academics, section 1 wording, section 2 api ai implementation, wordings, and links at end       wording
+Then fix,  section 2 api ai implementation, wordings,
 
 After for Capstone fix wordings in every section + vid 
 
