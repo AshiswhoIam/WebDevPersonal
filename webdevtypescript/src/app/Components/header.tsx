@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
           {/* Login Button */}
           <div className="hidden md:flex">
-            <Link href="/login" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+            <Link href="/Login" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
               Login
             </Link>
           </div>
@@ -104,13 +104,13 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <Link href="/Capstone" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
               Capstone
             </Link>
-            <Link href="/ai" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/AiModel" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
               Ai Model
             </Link>
-            <Link href="/chess" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/Chess" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
               Chess
             </Link>
-            <Link href="/login" className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/Login" className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700" onClick={() => setIsMenuOpen(false)}>
               Login
             </Link>
           </div>
