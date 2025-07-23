@@ -27,3 +27,9 @@ Make a chess vid since its prob not gonna work,
 Then lastly we work on the python integration if not just make a vid much easier.
 
 Login Register System.
+
+
+
+Will have to add this https://developers.google.com/terms#a_your_end_users
+
+
