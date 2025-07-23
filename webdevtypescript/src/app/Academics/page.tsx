@@ -1,9 +1,129 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import Header from '../Components/header';
 import Footer from '../Components/footer';
 import Link from 'next/link';
 
+//Modal component for displaying course descriptions
+const CourseModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  courseName: string;
+  description: string;
+  loading: boolean;
+}> = ({ isOpen, onClose, courseName, description, loading }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-xl font-bold text-gray-900">{courseName}</h3>
+            <button 
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+          
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-3 text-gray-600">Generating description...</span>
+            </div>
+          ) : (
+            <div className="text-gray-700 leading-relaxed">
+              {description ? (
+                <p>{description}</p>
+              ) : (
+                <p className="text-red-500">Failed to generate description. Please try again.</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Academics: React.FC = () => {
+  const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [courseDescription, setCourseDescription] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleCourseClick = async (courseName: string) => {
+    setSelectedCourse(courseName);
+    setIsModalOpen(true);
+    setLoading(true);
+    setCourseDescription('');
+    
+    try {
+      const response = await fetch('/api/generate-course-description', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseName }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate description');
+      }
+      
+      const data = await response.json();
+      setCourseDescription(data.description);
+    } catch (error) {
+      console.error('Error:', error);
+      setCourseDescription('Sorry, could not generate description at this time.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const courses = [
+    'COMP 232 Mathematics for Computer Science',
+    'COMP 248 Object-Oriented Programming I',
+    'ENGR 201 Professional Practice and Responsibility',
+    'GEOG 220 General Education Elective',
+    'COMP 249 Object-Oriented Programming II',
+    'ENGR 233 Applied Advanced Calculus',
+    'SOEN 228 System Hardware',
+    'SOEN 287 Web Programming',
+    'PHYS 284 Engineering and Natural Science Group',
+    'COMP 348 Principles of Programming Languages',
+    'COMP 352 Data Structures and Algorithms',
+    'ENCS 282 Technical Writing and Communication',
+    'ENGR 202 Sustainable Development and Environmental Stewardship',
+    'SOEN 341 Software Process and Practices',
+    'COMP 346 Operating Systems',
+    'ELEC 275 Principles of Electrical Engineering',
+    'ENGR 371 Probability and Statistics in Engineering',
+    'SOEN 331 Formal Methods for Software Engineering',
+    'COMP 345 Advanced Program Design with C++'
+  ];
+
+  const coursesColumn2 = [
+    'COMP 335 Introduction to Theoretical Computer Science',
+    'ENGR 391 Numerical Methods in Engineering',
+    'SOEN 342 Software Requirements and Deployment',
+    'SOEN 343 Software Architecture and Design',
+    'SOEN 384 Management, Measurement and Quality Control',
+    'SOEN 363 Data Systems for Software Engineer',
+    'SOEN 345 Software Testing, Verification and Quality Assurance',
+    'SOEN 357 User Interface Design',
+    'SOEN 390 Software Engineering Team Design Project',
+    'SOEN 385 Control Systems and Applications',
+    'ENGR 301 Engineering Management Principles and Economics',
+    'SOEN 321 Information Systems Security',
+    'ENGR 392 Impact of Technology on Society',
+    'COMP 472 Artificial Intelligence',
+    'SOEN 387 Web‑Based Enterprise Application Design',
+    'SOEN 490 Capstone Software Engineering Design Project'
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -62,55 +182,40 @@ const Academics: React.FC = () => {
               and engineering principles. Emphasis on practical application through projects 
               and collaborative learning experiences.
             </p>
+
+             <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
+              Select a course below to explore an AI-generated description provided by Gemini.
+            </p>
             
             {/* Two Columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               {/* Left Column */}
               <div className="bg-white rounded-lg p-6 shadow-md">
-                
                 <div className="space-y-2">
-                  <p className="text-gray-700">COMP 232 Mathematics for Computer Science</p>
-                  <p className="text-gray-700">COMP 248 Object-Oriented Programming I</p>
-                  <p className="text-gray-700">ENGR 201 Professional Practice and Responsibility</p>
-                  <p className="text-gray-700">GEOG 2XX General Education Elective  </p>
-                  <p className="text-gray-700">COMP 249 Object-Oriented Programming II</p>
-                  <p className="text-gray-700">ENGR 233 Applied Advanced Calculus </p>
-                  <p className="text-gray-700">SOEN 228 System Hardware </p>
-                  <p className="text-gray-700">SOEN 287 Web Programming</p>
-                  <p className="text-gray-700">PHYS 284 Engineering and Natural Science Group</p>
-                  <p className="text-gray-700">COMP 348 Principles of Programming Languages </p>
-                  <p className="text-gray-700">COMP 352 Data Structures and Algorithms </p>
-                  <p className="text-gray-700">ENCS 282 Technical Writing and Communication</p>
-                  <p className="text-gray-700">ENGR 202 Sustainable Development and Environmental Stewardship</p>
-                  <p className="text-gray-700">SOEN 341 Software Process and Practices </p>
-                  <p className="text-gray-700">COMP 346 Operating Systems</p>
-                  <p className="text-gray-700">ELEC 275 Principles of Electrical Engineering</p>
-                  <p className="text-gray-700">ENGR 371 Probability and Statistics in Engineering</p>
-                  <p className="text-gray-700">SOEN 331 Formal Methods for Software Engineering</p>
-                  <p className="text-gray-700">COMP 345 Advanced Program Design with C++</p>
+                  {courses.map((course, index) => (
+                    <p 
+                      key={index}
+                      className="text-gray-700 cursor-pointer hover:text-blue-600 hover:bg-blue-50 p-2 rounded transition-all duration-200"
+                      onClick={() => handleCourseClick(course)}
+                    >
+                      {course}
+                    </p>
+                  ))}
                 </div>
               </div>
               
               {/* Right Column */}
               <div className="bg-white rounded-lg p-6 shadow-md">
-                
                 <div className="space-y-2">
-                  <p className="text-gray-700">COMP 335 Introduction to Theoretical Computer Science</p>
-                  <p className="text-gray-700">ENGR 391 Numerical Methods in Engineering</p>
-                  <p className="text-gray-700">SOEN 342 Software Requirements and Deployment</p>
-                  <p className="text-gray-700">SOEN 343 Software Architecture and Design </p>
-                  <p className="text-gray-700">SOEN 384 Management, Measurement and Quality Control </p>
-                  <p className="text-gray-700">SOEN 363 Data Systems for Software Engineer</p>
-                  <p className="text-gray-700">SOEN 345 Software Testing, Verification and Quality Assurance</p>
-                  <p className="text-gray-700">SOEN 357 User Interface Design</p>
-                  <p className="text-gray-700">SOEN 390 Software Engineering Team Design Project</p>
-                  <p className="text-gray-700">SOEN 385 Control Systems and Applications </p>
-                  <p className="text-gray-700">ENGR 301 Engineering Management Principles and Economics  </p>
-                  <p className="text-gray-700">SOEN 321 Information Systems Security  </p>
-                  <p className="text-gray-700">ENGR 392 Impact of Technology on Society </p>
-                  <p className="text-gray-700">COMP 472 Artificial Intelligence </p>
-                  <p className="text-gray-700">SOEN 387 Web‑Based Enterprise Application Design </p>
-                  <p className="text-gray-700">SOEN 490 Capstone Software Engineering Design Project  </p>
+                  {coursesColumn2.map((course, index) => (
+                    <p 
+                      key={index}
+                      className="text-gray-700 cursor-pointer hover:text-blue-600 hover:bg-blue-50 p-2 rounded transition-all duration-200"
+                      onClick={() => handleCourseClick(course)}
+                    >
+                      {course}
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -127,6 +232,7 @@ const Academics: React.FC = () => {
             </div>
           </div>
         </section>
+
         {/* Section 3 */}
         <section className="relative py-16 bg-[url('/AcadS3.png')] bg-cover bg-center bg-no-repeat">
           {/* overlay for better text readability */}
@@ -144,7 +250,6 @@ const Academics: React.FC = () => {
               <Link href="/">
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
               hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
-                
                 <p className="text-gray-700 font-medium">SQL</p>
               </div>
               </Link>
@@ -178,6 +283,15 @@ const Academics: React.FC = () => {
       
       {/* Footer */}
       <Footer />
+
+      {/* Course Description Modal */}
+      <CourseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        courseName={selectedCourse}
+        description={courseDescription}
+        loading={loading}
+      />
     </div>
   );
 };
