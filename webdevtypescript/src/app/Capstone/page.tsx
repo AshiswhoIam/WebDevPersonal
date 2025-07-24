@@ -51,9 +51,11 @@ const Capstone: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-md">
                 
                 <div className="space-y-2">
-                  <p className="text-gray-700">Description</p>
-                  <p className="text-gray-700">Description</p>
-    
+                  <p className="text-gray-700">Designed several pages of the website and user interface using Figma to ensure a modern and intuitive user experience.</p>
+                  <p className="text-gray-700">Collaborated on developing the landing page using Next.js and tailwind, focusing on responsive design.</p>
+                  <p className="text-gray-700">Help developed the 'View Events' page, which dynamically lists upcoming events and allows users to click for detailed information about each one.</p>
+                  <p className="text-gray-700">Implemented part of the front-end of the Athlete Profile page, ensuring a clean layout that highlights key details such as stats, user details, and bio information.</p>
+                  <p className="text-gray-700">Assisted in resolving a variety of bugs, including UI inconsistencies and integration issues, to enhance the overall functionality and user experience of the application.</p>
 
 
                 </div>
@@ -63,8 +65,12 @@ const Capstone: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-md">
                 
                 <div className="space-y-2">
-                  <p className="text-gray-700">Description</p>
-                  <p className="text-gray-700">Description</p>
+                  <p className="text-gray-700">Built the front-end interface for an interactive Results and Scoring page, enabling users to view live scores, filter results, and engage with dynamic visual data displays.</p>
+                  <p className="text-gray-700">Full-stack development of a Speactator and Live Streaming feature that integrates real-time video playback of archived content alongside a live chat interface for user engagement.</p>
+                  <p className="text-gray-700">Developed the interface for the athlete weigh-in check-in system, designing a user-friendly experience.</p>
+                  <p className="text-gray-700">Handled the front-end development of the FAQ page, creating an intuitive layout with expandable sections for streamlined access to information.</p>
+                  <p className="text-gray-700">Conducted end-to-end testing on key pages using Cypress, ensuring functionality, performance, and reliability across critical user flows.</p>
+
                 </div>
               </div>
             </div>
@@ -81,10 +87,7 @@ const Capstone: React.FC = () => {
                 Demo
               </h2>
               <p className="text-xl text-gray-300 max-w-2xl leading-relaxed">
-                Experience our platform in action. Watch how seamlessly our solution 
-                integrates with your workflow, delivering powerful results with 
-                intuitive simplicity. See the difference that cutting-edge technology 
-                can make for your business.
+                This demo showcases the  features and design of the capstone application, highlighting seamless navigation, intuitive interfaces, and user-focused functionality.
               </p>
             </div>
 
@@ -99,7 +102,7 @@ const Capstone: React.FC = () => {
                     controls
                     poster="/api/placeholder/800/450"
                   >
-                    <source src="/your-video.mp4" type="video/mp4" />
+                    <source src="/Final Demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   

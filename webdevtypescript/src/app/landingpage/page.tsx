@@ -2,6 +2,7 @@ import Header from '../Components/header';
 import Footer from '../Components/footer';
 import React from 'react';
 import styles from './LandingPage.module.css';
+import Link from 'next/link';
 
 const LandingPage: React.FC = () => {
   return (
@@ -69,9 +70,11 @@ const LandingPage: React.FC = () => {
                     new technologies. Strong communicator with excellent collaboration skills, ensuring seamless 
                     teamwork and efficient task execution.
                   </p>
+                  <Link href="/Academics">
                   <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     View My Academics
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>
