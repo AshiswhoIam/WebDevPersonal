@@ -1,9 +1,12 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '../Components/header';
 
 const RegisterPage = () => {
-  {/* State Declarations */}
+  const router = useRouter();
+  
+  //State Declarations store users inputs ('),toggle visibility(false),UI response load,err,succ
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState('');
@@ -11,16 +14,47 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-   {/* Form Submissions*/}
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //Form Submission handling
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    setTimeout(() => {
+    setError('');
+    setSuccess('');
+
+    try {
+       //Sending POST request to API route
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          confirmPassword,
+        }),
+      });
+      //Parse response JSON
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Account created successfully! Redirecting to login...');
+        setTimeout(() => {
+          router.push('/Login'); // Adjust path as needed
+        }, 2000);
+      } else {
+        setError(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('Network error. Please try again.');
+    } finally {
       setIsLoading(false);
-      console.log('Register attempt:', { name, email, password, confirmPassword });
-    }, 2000);
+    }
   };
 
   return (
@@ -47,6 +81,18 @@ const RegisterPage = () => {
               <p className="text-gray-300">Join us and start your journey today</p>
             </div>
 
+            {/* Error/Success Messages */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300 text-sm">
+                {success}
+              </div>
+            )}
+
             <div className="space-y-6">
               <div className="space-y-2">
                 <label htmlFor="name" className="text-sm font-medium text-gray-300 block">
@@ -65,6 +111,7 @@ const RegisterPage = () => {
                     className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
                     placeholder="Enter your preferred name"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -86,6 +133,7 @@ const RegisterPage = () => {
                     className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
                     placeholder="Enter your email"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -107,11 +155,13 @@ const RegisterPage = () => {
                     className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
                     placeholder="Create a strong password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    disabled={isLoading}
                   >
                     {showPassword ? (
                       // Eye Off Icon
@@ -146,11 +196,13 @@ const RegisterPage = () => {
                     className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
                     placeholder="Re-enter your password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                    disabled={isLoading}
                   >
                     {showConfirmPassword ? (
                       // Eye Off Icon
@@ -174,6 +226,7 @@ const RegisterPage = () => {
                     type="checkbox"
                     className="w-4 h-4 text-blue-500 bg-transparent border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
                     required
+                    disabled={isLoading}
                   />
                   <span className="ml-2">
                     I agree to the{' '}
