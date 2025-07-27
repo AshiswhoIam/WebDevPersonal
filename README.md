@@ -29,6 +29,10 @@ Then lastly we work on the python integration if not just make a vid much easier
 Login Register System.
 
 
+Need to fix the z axis for layout on the sign in icons.
+Add a pfp page just a small one.
+Check for login bug if anymore
+Add login back enter. Register as well.
 
 Will have to add this https://developers.google.com/terms#a_your_end_users
 

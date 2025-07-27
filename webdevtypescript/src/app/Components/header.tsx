@@ -95,11 +95,11 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   };
 
   return (
-    <header className={`bg-white shadow-sm border-b border-gray-200 ${className}`}>
+    <header className={`bg-white shadow-sm border-b border-gray-200 relative ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 z-10">
             <Link href="/">
               <Image
                 src="/LOGOA.png"
@@ -138,10 +138,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
             ) : user ? (
               // Profile dropdown when logged in
-              <div className="relative" ref={profileRef}>
+              <div className="relative z-50" ref={profileRef}>
                 <button
                   onClick={toggleProfile}
-                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1"
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1 relative z-50"
                 >
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
                     {getUserInitials(user.name)}
@@ -154,28 +154,28 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
                 {/* Profile Dropdown */}
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl py-1 z-[999] border border-gray-200 min-w-max">
                     <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
                       <div className="font-medium">{user.name}</div>
                       <div className="text-gray-500">{user.email}</div>
                     </div>
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors relative z-[999] cursor-pointer"
                       onClick={() => setIsProfileOpen(false)}
                     >
                       Profile Settings
                     </Link>
                     <Link
                       href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors relative z-[999] cursor-pointer"
                       onClick={() => setIsProfileOpen(false)}
                     >
                       Home
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors relative z-[999] cursor-pointer"
                     >
                       Sign Out
                     </button>
@@ -191,10 +191,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden z-10">
             <button
               type="button"
-              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 p-2"
               aria-controls="mobile-menu"
               aria-expanded={isMenuOpen}
               onClick={toggleMenu}
@@ -216,21 +216,41 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
+        <div className="md:hidden absolute top-full left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-lg" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
-            <Link href="/" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              href="/" 
+              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Home
             </Link>
-            <Link href="/Academics" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              href="/Academics" 
+              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Academics
             </Link>
-            <Link href="/Capstone" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              href="/Capstone" 
+              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Capstone
             </Link>
-            <Link href="/AiModel" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              href="/AiModel" 
+              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Ai Model
             </Link>
-            <Link href="/Chess" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              href="/Chess" 
+              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Chess
             </Link>
             
@@ -247,25 +267,37 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                       <div className="text-sm text-gray-500">{user.email}</div>
                     </div>
                   </div>
-                  <Link href="/profile" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+                  <Link 
+                    href="/profile" 
+                    className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     Profile Settings
                   </Link>
-                  <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
-                    Dashboard
+                  <Link 
+                    href="/" 
+                    className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Home
                   </Link>
                   <button
                     onClick={() => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="text-red-700 hover:text-red-900 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                    className="text-red-700 hover:text-red-900 hover:bg-red-50 block px-3 py-2 rounded-md text-base font-medium w-full text-left transition-colors"
                   >
                     Sign Out
                   </button>
                 </div>
               </>
             ) : (
-              <Link href="/Login" className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700" onClick={() => setIsMenuOpen(false)}>
+              <Link 
+                href="/Login" 
+                className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700 transition-colors" 
+                onClick={() => setIsMenuOpen(false)}
+              >
                 Login
               </Link>
             )}
