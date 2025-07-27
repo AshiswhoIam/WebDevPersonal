@@ -18,7 +18,7 @@ const RegisterPage = () => {
   const [success, setSuccess] = useState('');
 
   //Form Submission handling
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -93,7 +93,7 @@ const RegisterPage = () => {
               </div>
             )}
 
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label htmlFor="name" className="text-sm font-medium text-gray-300 block">
                   What would you like to be called?
@@ -244,7 +244,6 @@ const RegisterPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                onClick={handleSubmit}
                 className="w-full relative bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? (
@@ -262,7 +261,7 @@ const RegisterPage = () => {
                   </div>
                 )}
               </button>
-            </div>
+            </form>
 
             <div className="text-center mt-8">
               <p className="text-gray-400">
