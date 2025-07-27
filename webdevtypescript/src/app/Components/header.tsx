@@ -1,30 +1,104 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-
- {/*Instead of direct change can just add class name to make change in header ex.*/}
 interface HeaderProps {
   className?: string;
 }
 
-{/*Declare using interfaces, Hook use state for menu action->inital default val menu closed=false.*/}
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
-{/*If isMenuOpen is false, this will change to true. If it’s true,becomes false.*/}
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      //Check if there's a token in cookies by making a request to a protected route
+      const response = await fetch('/api/auth/logincheck', {
+        method: 'GET',
+        credentials: 'include', //Include cookies
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData.user);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      
+      setUser(null);
+      setIsProfileOpen(false);
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  //Get user initials for profile circle
+  const getUserInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <header className={`bg-white shadow-sm border-b border-gray-200 ${className}`}>
-      {/*Setting max width of container 7xl, mx-auto to center L/R, px- for padding small/large screens*/}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Flex box layout container, justify spaced evenly, items center to center h for hieght */}
         <div className="flex justify-between items-center h-16">
-          {/* Logo, flex-shrink-0 prevents shrinking when in flex containter*/}
+          {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/">
               <Image
@@ -38,9 +112,8 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </Link>
           </div>
 
-          {/* Navigation, hide elements on small screens,flexbox medium screens,horizontal spacing. */}
+          {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {/*px py padding hori and vertical, rounded-md round corners, text small size, trans-color for hovering smooth effect*/} 
             <Link href="/" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Home
             </Link>
@@ -58,16 +131,67 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </Link>
           </nav>
 
-          {/* Login Button */}
-          <div className="hidden md:flex">
-            <Link href="/Login" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
-              Login
-            </Link>
+          {/* Auth Section */}
+          <div className="hidden md:flex items-center">
+            {isLoading ? (
+              // Loading spinner
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+            ) : user ? (
+              // Profile dropdown when logged in
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={toggleProfile}
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1"
+                >
+                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                    {getUserInitials(user.name)}
+                  </div>
+                  <span className="hidden lg:block text-sm font-medium">{user.name}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Profile Dropdown */}
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                      <div className="font-medium">{user.name}</div>
+                      <div className="text-gray-500">{user.email}</div>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      Profile Settings
+                    </Link>
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      Home
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              //Login button when not logged in
+              <Link href="/Login" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                Login
+              </Link>
+            )}
           </div>
 
-          {/* Mobile menu button hidden when 768px or larger */}
+          {/* Mobile menu button */}
           <div className="md:hidden">
-            {/*focus ring-> edge of the outline of the button.*/}
             <button
               type="button"
               className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
@@ -75,7 +199,6 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               aria-expanded={isMenuOpen}
               onClick={toggleMenu}
             >
-              {/* setting h and w, viewbox coord sys and sizing for icons, stroke for thicc, the numbers are lines to display X when to close the menu, the other is triple - */}
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -110,9 +233,42 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <Link href="/Chess" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
               Chess
             </Link>
-            <Link href="/Login" className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700" onClick={() => setIsMenuOpen(false)}>
-              Login
-            </Link>
+            
+            {/* Mobile auth section */}
+            {user ? (
+              <>
+                <div className="border-t border-gray-200 pt-2">
+                  <div className="flex items-center px-3 py-2">
+                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                      {getUserInitials(user.name)}
+                    </div>
+                    <div>
+                      <div className="text-base font-medium text-gray-800">{user.name}</div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                    </div>
+                  </div>
+                  <Link href="/profile" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+                    Profile Settings
+                  </Link>
+                  <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-red-700 hover:text-red-900 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            ) : (
+              <Link href="/Login" className="bg-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700" onClick={() => setIsMenuOpen(false)}>
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}

@@ -17,6 +17,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
     }
 
+    // Check if JWT_SECRET exists
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error('JWT_SECRET environment variable is not set!');
+      return NextResponse.json({ 
+        message: 'Server configuration error' 
+      }, { status: 500 });
+    }
+
     //Connect to MongoDB using client promise
     console.log('Connecting to MongoDB...');
     const client = await clientPromise;
@@ -46,7 +55,7 @@ export async function POST(req: NextRequest) {
         email: user.email,
         name: user.name
       },
-      process.env.JWT_SECRET || 'your-fallback-secret-key', 
+      jwtSecret,
       { expiresIn: '7d' }
     );
 
