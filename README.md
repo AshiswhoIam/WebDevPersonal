@@ -23,12 +23,25 @@ Make a chess vid since its prob not gonna work,
 Then lastly we work on the python integration if not just make a vid much easier.
 
 Some stuff noticed to fix eventually later for smooth user exp:
+
 pfp change on change should change the top right on header,
 if refresh page on pfp message should be gone
 can prob remove the email being displayed on the dropdown
 Bug when starting need to double click and wait for fast refresh.
 Add the missing links ex: academics end, terms and privacy etc.
-Will have to change the way the image saving is handled maybe. 
+Will have to change the way the image saving is handled Ill need to store it in the db or cloud.
+
+
+So the plan for prio now:
+
+Change the image saving ill reduce the size for now and default it to mongo atlases
+Then Add missing links context etc
+remove the email being displayed on the dropdown
+Video for Chess
+
+Make ai backend model, then api connect it to next js figure which ones
+
+Then fix site, Then deploy, then bug fix.
 
 Will have to add this https://developers.google.com/terms#a_your_end_users
 
