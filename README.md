@@ -18,21 +18,17 @@ Then integrate
 
 
 
-Then fix,  section 2 api ai implementation, wordings,
-
-After for Capstone fix wordings in every section + vid 
-
 Make a chess vid since its prob not gonna work,           
 
 Then lastly we work on the python integration if not just make a vid much easier.
 
-Login Register System.
-
-
-Need to fix the z axis for layout on the sign in icons.
-Add a pfp page just a small one.
-Check for login bug if anymore
-Add login back enter. Register as well.
+Some stuff noticed to fix eventually later for smooth user exp:
+pfp change on change should change the top right on header,
+if refresh page on pfp message should be gone
+can prob remove the email being displayed on the dropdown
+Bug when starting need to double click and wait for fast refresh.
+Add the missing links ex: academics end, terms and privacy etc.
+Will have to change the way the image saving is handled maybe. 
 
 Will have to add this https://developers.google.com/terms#a_your_end_users
 

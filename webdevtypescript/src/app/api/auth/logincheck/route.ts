@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+import clientPromise from '../../../../../backend/lib/mongodb.js'; 
 
 export async function GET(req: NextRequest) {
   try {
@@ -21,11 +23,26 @@ export async function GET(req: NextRequest) {
     //Verify the token 
     const decoded = jwt.verify(token, jwtSecret) as any;
 
+    //Get user from database to include profilePicture
+    const client = await clientPromise;
+    const db = client.db('Webdev');
+    const users = db.collection('info');
+
+    const user = await users.findOne(
+      { _id: new ObjectId(decoded.userId) },
+      { projection: { password: 0 } } // Exclude password
+    );
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
     return NextResponse.json({
       user: {
-        id: decoded.userId,
-        name: decoded.name,
-        email: decoded.email
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture || null
       }
     }, { status: 200 });
 
