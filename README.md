@@ -34,10 +34,8 @@ Will have to change the way the image saving is handled Ill need to store it in 
 
 So the plan for prio now:
 
-Change the image saving ill reduce the size for now and default it to mongo atlases
-Then Add missing links context etc
-remove the email being displayed on the dropdown
-Video for Chess
+
+Update SLQ link then Video for Chess
 
 Make ai backend model, then api connect it to next js figure which ones
 

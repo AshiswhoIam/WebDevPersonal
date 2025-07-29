@@ -263,12 +263,16 @@ const Academics: React.FC = () => {
               </Link>
               
               {/* Rectangle 3 */}
-              <Link href="/">
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
-              hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
-                <p className="text-gray-700 font-medium">JAVA</p>
-              </div>
-              </Link>
+              <a 
+                href="https://github.com/AshiswhoIam/JavaProjects" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
+                hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
+                  <p className="text-gray-700 font-medium">JAVA</p>
+                </div>
+              </a>
               {/* Rectangle 4 */}
               <Link href="/AiModel">
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
