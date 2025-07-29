@@ -35,7 +35,7 @@ const ProfilePage = () => {
         const data = await response.json();
         setUser({
           ...data.user,
-          profilePicture: sanitizeUrl(data.user.profilePicture)
+          profilePicture: sanitizeBase64Image(data.user.profilePicture)
         });
       } else {
         router.push('/Login');
@@ -48,9 +48,24 @@ const ProfilePage = () => {
     }
   };
 
-  const sanitizeUrl = (url: any): string | null => {
-    if (!url || typeof url !== 'string' || url === 'null' || url === 'undefined') return null;
-    return url.startsWith('/uploads/') || url.startsWith('http') ? url : null;
+  //Updated sanitization for base64 images
+  const sanitizeBase64Image = (imageData: any): string | null => {
+    if (!imageData || typeof imageData !== 'string' || imageData === 'null' || imageData === 'undefined') {
+      return null;
+    }
+    
+    //Check if it's a valid base64 data URL
+    const base64Pattern = /^data:image\/(jpeg|jpg|png|gif|webp);base64,/;
+    if (base64Pattern.test(imageData)) {
+      return imageData;
+    }
+    
+    //Legacy support for file paths 
+    if (imageData.startsWith('/uploads/') || imageData.startsWith('http')) {
+      return imageData;
+    }
+    
+    return null;
   };
 
   const getUserInitials = (name: string) => {
@@ -72,8 +87,9 @@ const ProfilePage = () => {
         if (!file.type.startsWith('image/')) {
           throw new Error('Please select a valid image file');
         }
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error('File size must be less than 5MB');
+        //Reduced size limit for base64 storage
+        if (file.size > 3 * 1024 * 1024) {
+          throw new Error('File size must be less than 3MB for database storage');
         }
 
         const formData = new FormData();
@@ -89,12 +105,13 @@ const ProfilePage = () => {
         setMessage({type: 'success', text: successMsg});
         
         if (action === 'upload') {
-          setUser(prev => prev ? {...prev, profilePicture: sanitizeUrl(data.profilePictureUrl)} : null);
+          setUser(prev => prev ? {...prev, profilePicture: sanitizeBase64Image(data.profilePictureUrl)} : null);
         } else {
           setUser(prev => prev ? {...prev, profilePicture: null} : null);
         }
         setImageError(false);
-        setTimeout(loadUserProfile, 500);
+        //Shorter timeout since we don't need to wait for file system operations
+        setTimeout(loadUserProfile, 200);
       } else {
         throw new Error(data.message || `Failed to ${action} profile picture`);
       }
@@ -209,7 +226,7 @@ const ProfilePage = () => {
                 </div>
                 
                 <p className="text-sm text-gray-500">
-                  Supported formats: JPG, PNG, GIF. Maximum file size: 5MB.
+                  Supported formats: JPG, PNG, GIF, WebP. Maximum file size: 3MB (optimized for database storage).
                 </p>
               </div>
             </div>

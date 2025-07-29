@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         const userData = await response.json();
         setUser({
           ...userData.user,
-          profilePicture: sanitizeUrl(userData.user.profilePicture)
+          profilePicture: sanitizeBase64Image(userData.user.profilePicture)
         });
       } else {
         //Fallback to basic auth check
@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           const authData = await authResponse.json();
           setUser({
             ...authData.user,
-            profilePicture: sanitizeUrl(authData.user.profilePicture)
+            profilePicture: sanitizeBase64Image(authData.user.profilePicture)
           });
         } else {
           setUser(null);
@@ -80,9 +80,24 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     }
   };
 
-  const sanitizeUrl = (url: any): string | null => {
-    if (!url || typeof url !== 'string' || url === 'null' || url === 'undefined') return null;
-    return url.startsWith('/uploads/') || url.startsWith('http') ? url : null;
+  //Updated sanitization for base64 images (same as profile page)
+  const sanitizeBase64Image = (imageData: any): string | null => {
+    if (!imageData || typeof imageData !== 'string' || imageData === 'null' || imageData === 'undefined') {
+      return null;
+    }
+    
+    //Check if it's a valid base64 data URL
+    const base64Pattern = /^data:image\/(jpeg|jpg|png|gif|webp);base64,/;
+    if (base64Pattern.test(imageData)) {
+      return imageData;
+    }
+    
+    // Legacy support for file paths (if any exist)
+    if (imageData.startsWith('/uploads/') || imageData.startsWith('http')) {
+      return imageData;
+    }
+    
+    return null;
   };
 
   const handleLogout = async () => {
@@ -202,23 +217,12 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 {/* Profile Dropdown */}
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl py-1 z-[999] border border-gray-200 min-w-max">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-gray-500">{user.email}</div>
-                    </div>
                     <Link
                       href="/Profile"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors relative z-[999] cursor-pointer"
                       onClick={() => setIsProfileOpen(false)}
                     >
                       Profile Settings
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors relative z-[999] cursor-pointer"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      Home
                     </Link>
                     <button
                       onClick={handleLogout}

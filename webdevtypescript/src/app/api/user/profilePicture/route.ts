@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, unlink, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import clientPromise from '../../../../../backend/lib/mongodb.js';
@@ -41,20 +38,20 @@ const serializeUser = (user: any) => ({
   profilePicture: user.profilePicture || null
 });
 
-const removeFile = async (filePath: string) => {
-  try {
-    await unlink(path.join(process.cwd(), 'public', filePath));
-  } catch {
-    //File already deleted or doesn't exist
-  }
+//Convert file to base64 with data URL format
+const fileToBase64 = async (file: File): Promise<string> => {
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  const base64 = buffer.toString('base64');
+  return `data:${file.type};base64,${base64}`;
 };
 
-const ensureUploadDir = async () => {
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'profilePictures');
-  if (!existsSync(uploadDir)) {
-    await mkdir(uploadDir, { recursive: true });
-  }
-  return uploadDir;
+//Validate image size (base64 will be ~33% larger than original)
+const validateImageSize = (file: File): boolean => {
+  //MongoDB document size limit is 16MB
+  //Base64 encoding increases size by ~33%, so 3MB file becomes ~4MB base64
+  const maxSize = 3 * 1024 * 1024; // 3MB
+  return file.size <= maxSize;
 };
 
 //POST - Handle profile picture upload
@@ -67,40 +64,35 @@ export async function POST(request: NextRequest) {
     const file = formData.get('profilePicture') as File;
     if (!file) return errorResponse('No file provided', 400);
 
-    //Validate file
+    // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       return errorResponse('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.', 400);
     }
-    if (file.size > 5 * 1024 * 1024) {
-      return errorResponse('File size too large. Maximum size is 5MB.', 400);
+
+    //Validate file size (more restrictive for base64 storage)
+    if (!validateImageSize(file)) {
+      return errorResponse('File size too large. Maximum size is 3MB for database storage.', 400);
     }
 
-    //Get current user and remove old picture
+    //Get current user
     const currentUser = await getUserById(userId);
     if (!currentUser) return errorResponse('User not found', 404);
-    
-    if (currentUser.profilePicture) {
-      await removeFile(currentUser.profilePicture);
-    }
 
-    //Save new file
-    const uploadDir = await ensureUploadDir();
-    const fileName = `user-${userId}-${Date.now()}${path.extname(file.name)}`;
-    const filePath = path.join(uploadDir, fileName);
-    const publicPath = `/uploads/profilePictures/${fileName}`;
+    //Convert file to base64
+    const base64Image = await fileToBase64(file);
 
-    const bytes = await file.arrayBuffer();
-    await writeFile(filePath, Buffer.from(bytes));
-
-    //Update user
+    // Update user with base64 image
     await updateUser(userId, {
-      $set: { profilePicture: publicPath, updatedAt: new Date() }
+      $set: { 
+        profilePicture: base64Image,
+        updatedAt: new Date() 
+      }
     });
 
     return NextResponse.json({
       message: 'Profile picture updated successfully',
-      profilePictureUrl: publicPath
+      profilePictureUrl: base64Image
     });
 
   } catch (error) {
@@ -119,8 +111,7 @@ export async function DELETE(request: NextRequest) {
     if (!currentUser) return errorResponse('User not found', 404);
     if (!currentUser.profilePicture) return errorResponse('No profile picture to remove', 400);
 
-    //Remove file and update user
-    await removeFile(currentUser.profilePicture);
+    //Remove profile picture from database
     await updateUser(userId, {
       $unset: { profilePicture: 1 },
       $set: { updatedAt: new Date() }
