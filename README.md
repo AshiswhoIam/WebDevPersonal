@@ -35,9 +35,9 @@ Will have to change the way the image saving is handled Ill need to store it in 
 So the plan for prio now:
 
 
-Update SLQ link then Video for Chess
+Video for Chess-> later we can change.
 
-Make ai backend model, then api connect it to next js figure which ones
+Fast API coding and linkage with ai model, into docker, into next js linkage...
 
 Then fix site, Then deploy, then bug fix.
 
