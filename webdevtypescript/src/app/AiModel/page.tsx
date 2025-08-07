@@ -35,150 +35,174 @@ const AiModel: React.FC = () => {
       {/* Header */}
       <Header />
 
-      {/* AI Precision Info Box */}
-      <div className="absolute top-20 right-8 z-20 bg-black bg-opacity-60 backdrop-blur-md text-white px-4 py-2 rounded-xl shadow-lg text-sm font-medium">
-        This AI Model has a <span className="text-green-400 font-bold">68.06%</span> overall accuracy
+      {/* AI Precision Info Box - Responsive with better spacing */}
+      <div className="absolute top-20 right-2 sm:right-4 lg:right-8 z-20 bg-black bg-opacity-80 backdrop-blur-md text-white px-2 sm:px-3 lg:px-4 py-2 rounded-xl shadow-lg text-xs sm:text-sm font-medium max-w-[180px] sm:max-w-[250px] lg:max-w-none">
+        <div className="break-words">
+          <span className="hidden lg:inline">This AI Model has a </span>
+          <span className="hidden sm:inline lg:hidden">AI Model: </span>
+          <span className="text-green-400 font-bold">68.06%</span>
+          <span className="hidden sm:inline"> accuracy</span>
+        </div>
       </div>
       
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center p-8">
-        {/* Title */}
-        <div className="mb-8 text-center">
+      {/* Main Content - Fixed height sections to prevent layout shifts */}
+      <main className="flex-1 flex flex-col items-center p-8 min-h-[1200px]">
+        {/* Title Section - Moved down to avoid overlap */}
+        <div className="mb-8 text-center mt-16 sm:mt-12 lg:mt-8">
           <h1 className="text-4xl font-bold text-white drop-shadow-2xl mb-2">
             Welcome to My Personal Made AI Image Identifier for Gen 1 Pokemons 
           </h1>
           <div className="w-32 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
-        {/* API Status - floating at top */}
+        {/* API Status Section */}
         <div className="mb-6 p-4 bg-black bg-opacity-50 backdrop-blur-sm rounded-lg">
           <div className="text-white font-semibold mb-2">API Status:</div>
           <ApiStatus />
         </div>
         
-        <div className="relative max-w-lg w-full">
-          {/* Backdrop blur overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm rounded-2xl"></div>
-          
-          {/* Upload Section */}
-          <div className="relative z-10 p-6">
-            <div className="mb-6">
-              <FileUpload 
-                onFileSelect={handleFileSelect}
-                accept="image/*"
-                maxSizeMB={10}
-                disabled={loading}
-              />
-            </div>
-            
-            {/* Predict Button */}
-            {selectedFile && (
-              <div className="text-center mb-6">
-                <button
-                  onClick={handlePredict}
-                  disabled={loading}
-                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold text-lg transition-colors shadow-lg"
-                >
-                  {loading ? 'Predicting...' : 'Predict Pokemon'}
-                </button>
-              </div>
-            )}
+        {/* Upload Section - Fixed container */}
+        <div className="relative max-w-lg w-full mb-8">
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm rounded-2xl h-[400px]"></div>
+          <div className="relative z-10 p-6 h-[400px]">
+            <FileUpload 
+              onFileSelect={handleFileSelect}
+              accept="image/*"
+              maxSizeMB={10}
+              disabled={loading}
+            />
           </div>
         </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className="mt-6 p-4 bg-red-500 bg-opacity-90 backdrop-blur-sm border border-red-400 text-white rounded-lg max-w-lg w-full">
-            <h3 className="font-semibold">Error:</h3>
-            <p>{error}</p>
-          </div>
-        )}
-
-        {/* Results Section */}
-        {prediction && (
-          <div className="mt-8 p-6 bg-black bg-opacity-70 backdrop-blur-sm rounded-2xl max-w-2xl w-full">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Prediction Results</h2>
-            
-            <div className="space-y-6 text-white">
-              {/* Main Prediction */}
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">
-                  {prediction.predicted_pokemon}
-                </div>
-                <div className="text-xl">
-                  Confidence: <span className="text-green-400 font-semibold">
-                    {(prediction.confidence * 100).toFixed(2)}%
-                  </span>
-                </div>
-              </div>
+        {/* Prediction Button Section - Cool outlined box */}
+        <div className="w-full max-w-lg h-20 flex items-center justify-center mb-8 relative z-10">
+          {selectedFile && (
+            <div className="relative">
+              {/* Animated border effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
               
-              {/* Pokemon Details */}
-              {prediction.pokemon_info && (
-                <div className="bg-white bg-opacity-10 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-center text-blue-300">
-                    Pokemon Details
-                  </h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <div>
-                        <span className="text-blue-300 font-semibold">Name:</span>
-                        <span className="ml-2 font-medium text-yellow-300">
-                          {prediction.pokemon_info.name}
-                        </span>
+              {/* Button container with cool border */}
+              <div className="relative bg-black bg-opacity-80 backdrop-blur-sm border-2 border-blue-500 rounded-xl p-4 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl"></div>
+                
+                <button
+                  onClick={handlePredict}
+                  disabled={loading}
+                  className="relative px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-500 hover:to-blue-600 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed font-semibold text-lg transition-all duration-300 shadow-lg transform hover:scale-105 hover:shadow-xl border border-blue-400"
+                >
+                  {loading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <span>Predicting...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>Predict Pokemon</span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Error Section - Fixed space */}
+        <div className="w-full max-w-lg h-16 mb-8 flex items-center justify-center">
+          {error && (
+            <div className="w-full p-4 bg-red-500 bg-opacity-90 backdrop-blur-sm border border-red-400 text-white rounded-lg">
+              <h3 className="font-semibold">Error:</h3>
+              <p>{error}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Results Section - Fixed space reserved */}
+        <div className="w-full max-w-2xl min-h-[600px]">
+          {prediction && (
+            <div className="p-6 bg-black bg-opacity-70 backdrop-blur-sm rounded-2xl">
+              <h2 className="text-2xl font-bold text-white mb-6 text-center">Prediction Results</h2>
+              
+              <div className="space-y-6 text-white">
+                {/* Main Prediction */}
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    {prediction.predicted_pokemon}
+                  </div>
+                  <div className="text-xl">
+                    Confidence: <span className="text-green-400 font-semibold">
+                      {(prediction.confidence * 100).toFixed(2)}%
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Pokemon Details */}
+                {prediction.pokemon_info && (
+                  <div className="bg-white bg-opacity-10 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4 text-center text-blue-300">
+                      Pokemon Details
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <div>
+                          <span className="text-blue-300 font-semibold">Name:</span>
+                          <span className="ml-2 font-medium text-yellow-300">
+                            {prediction.pokemon_info.name}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-blue-300 font-semibold">Types:</span>
+                          <span className="ml-2 font-medium text-green-300">
+                            {prediction.pokemon_info.types}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-blue-300 font-semibold">Height:</span>
+                          <span className="ml-2 font-medium text-purple-300">
+                            {prediction.pokemon_info.height}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-blue-300 font-semibold">Weight:</span>
+                          <span className="ml-2 font-medium text-orange-300">
+                            {prediction.pokemon_info.weight}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-blue-300 font-semibold">Habitat:</span>
+                          <span className="ml-2 font-medium text-pink-300">
+                            {prediction.pokemon_info.habitat}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-blue-300 font-semibold">Types:</span>
-                        <span className="ml-2 font-medium text-green-300">
-                          {prediction.pokemon_info.types}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-blue-300 font-semibold">Height:</span>
-                        <span className="ml-2 font-medium text-purple-300">
-                          {prediction.pokemon_info.height}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-blue-300 font-semibold">Weight:</span>
-                        <span className="ml-2 font-medium text-orange-300">
-                          {prediction.pokemon_info.weight}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-blue-300 font-semibold">Habitat:</span>
-                        <span className="ml-2 font-medium text-pink-300">
-                          {prediction.pokemon_info.habitat}
-                        </span>
+                      
+                      <div className="flex justify-center items-start">
+                        {prediction.pokemon_info.sprite_url && (
+                          <div className="text-center">
+                            <img
+                              src={prediction.pokemon_info.sprite_url}
+                              alt={`${prediction.pokemon_info.name} sprite`}
+                              className="w-32 h-32 mx-auto mb-2 bg-white bg-opacity-20 rounded-lg p-2"
+                            />
+                            <p className="text-sm text-gray-300">Official Sprite</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                     
-                    <div className="flex justify-center items-start">
-                      {prediction.pokemon_info.sprite_url && (
-                        <div className="text-center">
-                          <img
-                            src={prediction.pokemon_info.sprite_url}
-                            alt={`${prediction.pokemon_info.name} sprite`}
-                            className="w-32 h-32 mx-auto mb-2 bg-white bg-opacity-20 rounded-lg p-2"
-                          />
-                          <p className="text-sm text-gray-300">Official Sprite</p>
-                        </div>
-                      )}
+                    {/* Flavor Text */}
+                    <div className="mt-6">
+                      <div className="text-blue-300 font-semibold mb-2">Flavor Text:</div>
+                      <p className="text-sm text-white leading-relaxed bg-black bg-opacity-50 p-4 rounded-lg border border-gray-600">
+                        {prediction.pokemon_info.flavor_text}
+                      </p>
                     </div>
                   </div>
-                  
-                  {/* Description */}
-                  <div className="mt-6">
-                    <div className="text-blue-300 font-semibold mb-2">Description:</div>
-                    <p className="text-sm text-white leading-relaxed bg-black bg-opacity-50 p-4 rounded-lg border border-gray-600">
-                      {prediction.pokemon_info.flavor_text}
-                    </p>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
       
       {/* Footer */}
