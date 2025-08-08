@@ -146,7 +146,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
                     Drag and drop or click to select
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG, GIF up to {maxSizeMB}MB
+                    PNG, JPG up to {maxSizeMB}MB
                   </p>
                 </div>
               </div>

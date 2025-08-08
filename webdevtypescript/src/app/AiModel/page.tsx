@@ -8,11 +8,13 @@ import { usePokemonPrediction } from '../api/customHook/route';
 
 const AiModel: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loadedData, setLoadedData] = useState<string | null>(null);
+  const [showDataPopup, setShowDataPopup] = useState<boolean>(false);
   const { prediction, loading, error, predict, reset } = usePokemonPrediction();
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
-    reset(); // Clear previous results when a new file is selected
+    reset(); //Clear previous results when a new file is selected
   };
 
   const handlePredict = async () => {
@@ -20,9 +22,31 @@ const AiModel: React.FC = () => {
     try {
       await predict(selectedFile);
     } catch (err) {
-      // Error is already handled in the hook
+      //Error is already handled in the hook
       console.error('Prediction failed:', err);
     }
+  };
+
+  const handleLoadData = async () => {
+    try {
+      //Txt data
+      const response = await fetch('/classification_report27.txt');
+      if (!response.ok) {
+        throw new Error('Failed to load data file');
+      }
+      const text = await response.text();
+      setLoadedData(text);
+      setShowDataPopup(true);
+      console.log('Data loaded:', text);
+    } catch (err) {
+      console.error('Error loading data:', err);
+      //If ever error
+      alert('Failed to load txt classification data file. Please check if the file exists.');
+    }
+  };
+
+  const closePopup = () => {
+    setShowDataPopup(false);
   };
 
   return (
@@ -43,6 +67,21 @@ const AiModel: React.FC = () => {
           <span className="text-green-400 font-bold">68.06%</span>
           <span className="hidden sm:inline"> accuracy</span>
         </div>
+      </div>
+
+      {/* Classification Info Button - Same style as accuracy box */}
+      <div className="absolute top-32 sm:top-36 right-2 sm:right-4 lg:right-8 z-20">
+        <button
+          onClick={handleLoadData}
+          className="bg-black bg-opacity-80 backdrop-blur-md text-white px-2 sm:px-3 lg:px-4 py-2 rounded-xl shadow-lg text-xs sm:text-sm font-medium max-w-[180px] sm:max-w-[250px] lg:max-w-none hover:bg-opacity-90 transition-all duration-300 hover:scale-105"
+        >
+          <div className="break-words">
+            <span className="hidden lg:inline">View </span>
+            <span className="hidden sm:inline lg:hidden">View </span>
+            <span className="text-purple-400 font-bold">Classification</span>
+            <span className="hidden sm:inline"> Report</span>
+          </div>
+        </button>
       </div>
       
       {/* Main Content - Fixed height sections to prevent layout shifts */}
@@ -207,6 +246,56 @@ const AiModel: React.FC = () => {
       
       {/* Footer */}
       <Footer />
+
+      {/* Data Popup Overlay */}
+      {showDataPopup && loadedData && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50 p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          <div className="bg-gray-900 bg-opacity-80 backdrop-blur-md rounded-2xl border-2 border-purple-500 shadow-2xl max-w-4xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            {/* Popup Header */}
+            <div className="flex items-center justify-center p-6 border-b border-gray-700 flex-shrink-0">
+              <h3 className="text-2xl font-bold text-white flex items-center">
+                <svg className="w-6 h-6 mr-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Loaded Data
+              </h3>
+            </div>
+
+            {/* Popup Content - Fixed scrolling issue */}
+            <div className="flex-1 p-6 overflow-hidden">
+              <div 
+                className="w-full h-full bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-lg border border-gray-600 overflow-auto max-h-[60vh]"
+                style={{ 
+                  scrollbarWidth: 'auto',
+                  scrollbarColor: '#8b5cf6 #374151'
+                }}
+              >
+                <pre className="whitespace-pre-wrap text-gray-200 text-sm font-mono leading-relaxed p-4">
+                  {loadedData}
+                </pre>
+              </div>
+            </div>
+
+            {/* Popup Footer */}
+            <div className="flex items-center justify-between p-6 border-t border-gray-700 flex-shrink-0">
+              <div className="text-sm text-gray-400">
+                {loadedData.split('\n').length} lines • {loadedData.length} characters
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={closePopup}
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
