@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     //Verify the token 
     const decoded = jwt.verify(token, jwtSecret) as any;
 
-    //Get user from database to include profilePicture
+    //Get user from database to include profilePicture and role
     const client = await clientPromise;
     const db = client.db('Webdev');
     const users = db.collection('info');
@@ -42,6 +42,8 @@ export async function GET(req: NextRequest) {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role || 'user',
+        status: user.status || 'offline',
         profilePicture: user.profilePicture || null
       }
     }, { status: 200 });

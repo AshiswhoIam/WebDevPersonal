@@ -1,36 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+import clientPromise from '../../../../../backend/lib/mongodb';
 
 export async function POST(req: NextRequest) {
-  console.log('=== LOGOUT ROUTE CALLED ===');
-  
   try {
-    //Create response
+    const token = req.cookies.get('token')?.value;
+
+    //If token exists, update user status to offline
+    if (token && process.env.JWT_SECRET) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: string };
+        
+        const client = await clientPromise;
+        const db = client.db('Webdev');
+        const users = db.collection('info');
+
+        await users.updateOne(
+          { _id: new ObjectId(decoded.userId) },
+          { 
+            $set: { 
+              status: 'offline',
+              updatedAt: new Date()
+            }
+          }
+        );
+      } catch (error) {
+        console.log('Token verification failed during logout:', error);
+        //Continue with logout even if token is invalid
+      }
+    }
+
+    //Clear the cookie
     const response = NextResponse.json({
       message: 'Logged out successfully'
     }, { status: 200 });
 
-    //Clear the token cookie
     response.cookies.set('token', '', {
       httpOnly: true,
       path: '/',
-      maxAge: 0, // Expire immediately
+      maxAge: 0,
       sameSite: 'strict',
       secure: process.env.NODE_ENV === 'production'
     });
 
-    console.log('Logout successful!');
     return response;
 
   } catch (error) {
     console.error('Logout error:', error);
-    return NextResponse.json({ message: 'Logout failed' }, { status: 500 });
+    return NextResponse.json({ 
+      message: 'Internal server error' 
+    }, { status: 500 });
   }
-}
-
-//GET method for testing
-export async function GET() {
-  console.log('=== LOGOUT ROUTE GET CALLED ===');
-  return NextResponse.json({
-    message: 'Logout endpoint - POST method required'
-  }, { status: 200 });
 }

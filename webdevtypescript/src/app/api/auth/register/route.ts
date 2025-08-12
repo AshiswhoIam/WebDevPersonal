@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Passwords do not match' }, { status: 400 });
     }
 
-    //Enforce minimum password length **will update this later for better secturiy.
+    //Enforce minimum password length **will update this later for better security.
     if (password.length < 6) {
       return NextResponse.json({ message: 'Password must be at least 6 characters long' }, { status: 400 });
     }
@@ -43,11 +43,13 @@ export async function POST(req: NextRequest) {
     //Hash the user's password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    //Create the new user object
+    //Create the new user object with role and status fields
     const newUser = {
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
+      role: 'user',
+      status: 'offline',
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -63,6 +65,8 @@ export async function POST(req: NextRequest) {
           id: result.insertedId,
           name,
           email: email.toLowerCase(),
+          role: newUser.role,
+          status: newUser.status,
           createdAt: newUser.createdAt
         }
       }, { status: 201 });

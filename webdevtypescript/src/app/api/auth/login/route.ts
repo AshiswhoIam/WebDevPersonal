@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import clientPromise from '../../../../../backend/lib/mongodb.js';
+import clientPromise from '../../../../../backend/lib/mongodb';
 
 //Function for handling api route for login auth
 export async function POST(req: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
     }
 
-    // Check if JWT_SECRET exists
+    //Check if JWT_SECRET exists
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       console.error('JWT_SECRET environment variable is not set!');
@@ -53,16 +53,23 @@ export async function POST(req: NextRequest) {
       { 
         userId: user._id,
         email: user.email,
-        name: user.name
+        name: user.name,
+        role: user.role || 'user'
       },
       jwtSecret,
       { expiresIn: '7d' }
     );
 
-    //Update last login
+    //Update last login and set status to online
     await users.updateOne(
       { _id: user._id },
-      { $set: { lastLogin: new Date() } }
+      { 
+        $set: { 
+          lastLogin: new Date(),
+          status: 'online',
+          updatedAt: new Date()
+        }
+      }
     );
 
     //Create response with user data
@@ -71,7 +78,9 @@ export async function POST(req: NextRequest) {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role || 'user',
+        status: 'online'
       },
       token // Also return token for client-side storage if needed
     }, { status: 200 });
