@@ -43,4 +43,4 @@ Then fix site, Then deploy, then bug fix.
 
 Will have to add this https://developers.google.com/terms#a_your_end_users
 
-
+REMINDER TO FIX DB COLLECTIONS FOR DELETED STUFF
