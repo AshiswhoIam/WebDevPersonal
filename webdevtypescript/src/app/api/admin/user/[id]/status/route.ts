@@ -1,4 +1,4 @@
-//api/admin/user/route.ts
+//api/admin/user/status/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';

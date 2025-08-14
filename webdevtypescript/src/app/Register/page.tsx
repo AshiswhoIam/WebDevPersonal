@@ -44,7 +44,7 @@ const RegisterPage = () => {
       if (response.ok) {
         setSuccess('Account created successfully! Redirecting to login...');
         setTimeout(() => {
-          router.push('/Login'); // Adjust path as needed
+          router.push('/Login'); 
         }, 2000);
       } else {
         setError(data.message || 'Registration failed');
@@ -205,7 +205,7 @@ const RegisterPage = () => {
                     disabled={isLoading}
                   >
                     {showConfirmPassword ? (
-                      // Eye Off Icon
+                      //Eye Off Icon
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                       </svg>
@@ -230,11 +230,11 @@ const RegisterPage = () => {
                   />
                   <span className="ml-2">
                     I agree to the{' '}
-                    <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
+                    <a href="/Terms" className="text-blue-400 hover:text-blue-300 transition-colors">
                       Terms of Service
                     </a>
                     {' '}and{' '}
-                    <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
+                    <a href="/Privacy" className="text-blue-400 hover:text-blue-300 transition-colors">
                       Privacy Policy
                     </a>
                   </span>
