@@ -45,7 +45,7 @@ const Chess: React.FC = () => {
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 A sophisticated chess application built with modern web technologies. 
-                Experience strategic gameplay with intelligent AI opponents (TBD) and elegant design.
+                Experience strategic gameplay with intelligent AI opponents (TBD) and unique design.
               </p>
             </div>
 
@@ -57,9 +57,8 @@ const Chess: React.FC = () => {
                   <video 
                     className="w-full h-full object-cover"
                     controls
-                    poster="/chess-thumbnail.jpg" // Add your thumbnail image
                   >
-                    <source src="/chess-game-demo.mp4" type="video/mp4" />
+                    <source src="/ChessDemo.mp4" type="video/mp4" />
                     {/* Fallback for browsers that don't support video */}
                     <div className="flex items-center justify-center h-full bg-gray-800 text-white">
                       <div className="text-center">
@@ -127,7 +126,7 @@ const Chess: React.FC = () => {
               </a>
               
               <button
-                onClick={() => alert('SFML integration is tough for now, demo will be available future date')}
+                onClick={() => alert('Integration will happen once the game is fully polished, demo will be available at a future date.')}
                 className="px-8 py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105"
               >
                 Play Live Demo

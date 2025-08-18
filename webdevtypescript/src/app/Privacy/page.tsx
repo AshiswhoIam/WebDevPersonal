@@ -63,6 +63,8 @@ const PrivacyPage = () => {
                 <p className="text-gray-300 leading-relaxed pl-11">
                   This Site does not actively collect personal information from visitors. However, basic data such as IP address, 
                   browser type, and device details may be gathered automatically for analytics, security, and functionality purposes.
+
+                  If you choose to sign up, it collects and store your name and email address for account management and communication. 
                 </p>
               </div>
 
@@ -75,7 +77,8 @@ const PrivacyPage = () => {
                 <p className="text-gray-300 leading-relaxed pl-11">
                   This Site may use cookies or similar technologies to improve user experience. Cookies do not contain 
                   personally identifiable information and are used solely for functionality and performance. You can disable 
-                  cookies through your browser settings.
+                  cookies through your browser settings. Additionally, user interactions is tracked on the site, including clicks and navigation patterns, 
+                  to improve user experience and optimize site performance.
                 </p>
               </div>
 
@@ -87,7 +90,7 @@ const PrivacyPage = () => {
                 </h2>
                 <p className="text-gray-300 leading-relaxed pl-11">
                   This Site may display or link to third-party content. ArkTech is not responsible for the privacy practices 
-                  of external sites. We recommend reviewing their individual privacy policies.
+                  of external sites. It is recommended reviewing their individual privacy policies.
                 </p>
               </div>
 
@@ -99,7 +102,7 @@ const PrivacyPage = () => {
                 </h2>
                 <p className="text-gray-300 leading-relaxed pl-11">
                   If you reach out via email or contact form, your name and email address will be used solely to respond 
-                  to your inquiry. We do not sell, rent, or share contact information with third parties.
+                  to your inquiry. This site does not sell, rent, or share contact information with third parties.
                 </p>
               </div>
 
@@ -123,7 +126,7 @@ const PrivacyPage = () => {
                   Changes to This Notice
                 </h2>
                 <p className="text-gray-300 leading-relaxed pl-11">
-                  We may update this Privacy Notice from time to time. Changes will be posted on this page and take 
+                  This site may update the Privacy Notice from time to time. Changes will be posted on this page and take 
                   effect immediately.
                 </p>
               </div>
@@ -142,7 +145,7 @@ const PrivacyPage = () => {
               {/* Last updated notice */}
               <div className="mt-12 pt-8 border-t border-white/10">
                 <p className="text-sm text-gray-400 text-center">
-                  Last updated: July 28th, 2025
+                  Last updated: August 18th, 2025
                 </p>
               </div>
             </div>

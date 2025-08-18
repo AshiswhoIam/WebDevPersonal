@@ -110,7 +110,7 @@ const LandingPage: React.FC = () => {
                     <h3 className="text-white text-xl font-semibold">Capstone Development</h3>
                     </div>
                 </a>
-              <p className="mt-4 text-gray-700 text-center p-4">The Capstone project was for the development of a web application while working with a stakeholder.</p>
+              <p className="mt-4 text-gray-700 text-center p-4">The capstone project involved developing a web application in collaboration with a stakeholder.</p>
               </div>
 
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
                     <h3 className="text-white text-xl font-semibold">Ai Model Development</h3>
                     </div>
                 </a>
-              <p className="mt-4 text-gray-700 text-center p-4">Different Ai Models that I've developed overtime. Currently( Img classifier & Expression Classifer) .</p>
+              <p className="mt-4 text-gray-700 text-center p-4">Different AI models that I've developed overtime: An image classifier & an facial expression classifer (privated) .</p>
               </div>       
               <div className="group rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 bg-white">
                 <a href="/Chess" className="block relative">
@@ -141,7 +141,7 @@ const LandingPage: React.FC = () => {
           {/* Content wrapper */}
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fadeIn">
             <h3 className={`text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg ${styles.heroText}`}>
-              A principle I live by that pushes me beyond my limits
+              An inspirational quote that keeps me going
             </h3>
             <div className="w-24 h-1 bg-blue-500 mx-auto mb-6 opacity-75" />
             <blockquote className={`text-xl md:text-2xl font-semibold italic text-white max-w-2xl mx-auto ${styles.quoteText}`}>

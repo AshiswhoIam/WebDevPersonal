@@ -41,7 +41,7 @@ const Capstone: React.FC = () => {
             
             {/* Description */}
             <p className="text-lg text-white text-center mb-12 max-w-3xl mx-auto leading-relaxed">
-              Heres some of my contributions to the development of the web application.
+              Here's some of my contributions to the development of the web application.
             </p>
 
             

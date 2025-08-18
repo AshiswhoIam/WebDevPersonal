@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
             {
               parts: [
                 {
-                  text: `Provide a brief 2-3 sentence description of the university course: ${courseName}. Focus on what students learn and practical applications.`
+                  text: `Provide a brief 2-3 sentence description of the university course: ${courseName}. Focus on what concepts students learn and practical applications.`
                 }
               ]
             }
@@ -58,6 +58,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     //Log any errors to the server console and return a 500 Internal Server Error
     console.error('Error generating course description:', error);
-    return new Response(JSON.stringify({ error: 'Failed to generate course description' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Failed to generate course description server error' }), { status: 500 });
   }
 }

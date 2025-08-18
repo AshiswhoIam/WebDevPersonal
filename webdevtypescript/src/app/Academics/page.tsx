@@ -186,6 +186,9 @@ const Academics: React.FC = () => {
              <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
               Select a course below to explore an AI-generated description provided by Gemini.
             </p>
+            <p className="text-sm text-gray-500 text-center -mt-4 max-w-3xl mx-auto leading-relaxed italic">
+              *Note may take time to load. Functionality depends on Google server availability. AI can make mistakes.
+            </p>
             
             {/* Two Columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">

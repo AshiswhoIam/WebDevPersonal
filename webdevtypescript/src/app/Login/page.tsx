@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
 
   //Submit handler
   const handleSubmit = async (e?: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
@@ -166,7 +167,13 @@ const LoginPage = () => {
                     />
                     Remember me
                   </label>
-                  <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">Forgot password?</a>
+                  <button 
+                    type="button"
+                    onClick={() => setShowForgotPasswordPopup(true)}
+                    className="text-blue-400 hover:text-blue-300 transition-colors bg-transparent border-none underline cursor-pointer"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
 
                 {/* Submit Button */}
@@ -211,6 +218,26 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Popup */}
+      {showForgotPasswordPopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl p-6 max-w-sm w-full">
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-white mb-2">Feature Coming Soon</h3>
+              <p className="text-gray-300 mb-6">
+                Password reset will be implemented later, create a new account if needed.
+              </p>
+              <button
+                onClick={() => setShowForgotPasswordPopup(false)}
+                className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-cyan-600 transition-all duration-200"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
