@@ -21,9 +21,11 @@ Bug when starting need to double click and wait for fast refresh.
 So the plan for prio now:
 Userstatus fix maybe.
 Sitedatalog fix needed a bit.
+Comments good ones.
+Read me update pics etc.
+
 Then work on deployment.
-
-
+Likely Vercel + railway? need to add docker as well.
 
 Will have to add this https://developers.google.com/terms#a_your_end_users
 
