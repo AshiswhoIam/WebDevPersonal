@@ -250,7 +250,7 @@ const Academics: React.FC = () => {
             {/* 4 Rectangles at Center - 2 per row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Rectangle 1 */}
-              <Link href="/https://github.com/AshiswhoIam/SQLProjects">
+              <Link href="https://github.com/AshiswhoIam/SQLProjects">
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center shadow-lg
               hover:shadow-xl hover:scale-105 hover:bg-white transition-all duration-300 ease-in-out cursor-pointer">
                 <p className="text-gray-700 font-medium">SQL</p>
