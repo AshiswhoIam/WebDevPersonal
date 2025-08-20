@@ -151,17 +151,17 @@ const AiModel: React.FC = () => {
         </div>
 
         {/* Error Section - Fixed space */}
-        <div className="w-full max-w-lg h-16 mb-8 flex items-center justify-center">
-          {error && (
+        {error && (
+          <div className="w-full max-w-lg mb-4 flex items-center justify-center">
             <div className="w-full p-4 bg-red-500 bg-opacity-90 backdrop-blur-sm border border-red-400 text-white rounded-lg">
               <h3 className="font-semibold">Error:</h3>
               <p>{error}</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Results Section - Fixed space reserved */}
-        <div className="w-full max-w-2xl min-h-[600px]">
+        {/* Results Section */}
+        <div className="w-full max-w-2xl min-h-[600px] -mt-4">
           {prediction && (
             <div className="p-6 bg-black bg-opacity-70 backdrop-blur-sm rounded-2xl">
               <h2 className="text-2xl font-bold text-white mb-6 text-center">Prediction Results</h2>
