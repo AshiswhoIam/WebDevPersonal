@@ -30,3 +30,10 @@ Likely Vercel + railway? need to add docker as well.
 Will have to add this https://developers.google.com/terms#a_your_end_users
 
 REMINDER TO FIX DB COLLECTIONS FOR DELETED STUFF
+
+
+
+Deploying update:
+Front use vercel and then backend use hugging face
+If doesnt work try other free options
+else just do video showcase.
