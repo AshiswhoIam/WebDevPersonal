@@ -94,6 +94,11 @@ const AiModel: React.FC = () => {
           <div className="w-32 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
+        <p className="text-sm font-semibold text-white text-center -mt-4 max-w-3xl mx-auto leading-relaxed">
+          *Note: may take some time to load due to free tier services. Functionality may depend on server availability.
+        </p>
+
+
         {/* API Status Section */}
         <div className="mb-6 p-4 bg-black bg-opacity-50 backdrop-blur-sm rounded-lg">
           <div className="text-white font-semibold mb-2">API Status:</div>
