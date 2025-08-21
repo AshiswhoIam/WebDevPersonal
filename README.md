@@ -37,3 +37,7 @@ Deploying update:
 Front use vercel and then backend use hugging face
 If doesnt work try other free options
 else just do video showcase.
+
+
+UPDATE HUGGING SPACE DEPLOYMENT SUCCESSFUL FOR NOW 
+GOING TO WORK VERCEL TOMORROW.
