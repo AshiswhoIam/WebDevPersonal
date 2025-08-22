@@ -35,7 +35,8 @@ const serializeUser = (user: any) => ({
   id: user._id.toString(),
   name: user.name,
   email: user.email,
-  profilePicture: user.profilePicture || null
+  profilePicture: user.profilePicture || null,
+  role: user.role || 'user'
 });
 
 //Convert file to base64 with data URL format

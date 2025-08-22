@@ -42,8 +42,8 @@ interface AnalyticsData {
 }
 
 // API function
-const fetchAnalyticsData = async (timeRange: string = '7d'): Promise<AnalyticsData> => {
-  const response = await fetch(`/api/analytics/stats?range=${timeRange}`, {
+const fetchAnalyticsData = async (): Promise<AnalyticsData> => {
+  const response = await fetch('/api/analytics/stats', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -62,20 +62,19 @@ const fetchAnalyticsData = async (timeRange: string = '7d'): Promise<AnalyticsDa
 const AnalyticsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [timeRange, setTimeRange] = useState('7d');
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState<AnalyticsData | null>(null);
 
   useEffect(() => {
     loadAnalyticsData();
-  }, [timeRange]);
+  }, []);
 
   const loadAnalyticsData = async () => {
     try {
       setIsLoading(true);
       setError('');
       
-      const analyticsData = await fetchAnalyticsData(timeRange);
+      const analyticsData = await fetchAnalyticsData();
       setData(analyticsData);
     } catch (error: any) {
       console.error('Failed to load analytics:', error);
@@ -170,21 +169,6 @@ const AnalyticsPage = () => {
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Site Data Logs</h1>
               <p className="text-gray-300">Track page views, user activity, and website performance</p>
-            </div>
-            
-            {/* Time Range Selector */}
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg p-2">
-              <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="bg-transparent text-white text-sm focus:outline-none cursor-pointer"
-                disabled={isLoading}
-              >
-                <option value="1d" className="bg-slate-800">Last 24 Hours</option>
-                <option value="7d" className="bg-slate-800">Last 7 Days</option>
-                <option value="30d" className="bg-slate-800">Last 30 Days</option>
-                <option value="90d" className="bg-slate-800">Last 90 Days</option>
-              </select>
             </div>
           </div>
         </div>
@@ -436,7 +420,7 @@ const AnalyticsPage = () => {
                 ) : (
                   <div className="text-center text-gray-400 py-8">
                     <svg className="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 01-2 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <div>No page data available</div>
                   </div>

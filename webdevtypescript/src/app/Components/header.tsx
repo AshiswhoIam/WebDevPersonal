@@ -13,6 +13,7 @@ interface User {
   name: string;
   email: string;
   profilePicture?: string | null;
+  role: string; // Added role field
 }
 
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
@@ -53,7 +54,8 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         const userData = await response.json();
         setUser({
           ...userData.user,
-          profilePicture: sanitizeBase64Image(userData.user.profilePicture)
+          profilePicture: sanitizeBase64Image(userData.user.profilePicture),
+          role: userData.user.role || 'user' // Ensure role is included
         });
       } else {
         //Fallback to basic auth check
@@ -66,7 +68,8 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           const authData = await authResponse.json();
           setUser({
             ...authData.user,
-            profilePicture: sanitizeBase64Image(authData.user.profilePicture)
+            profilePicture: sanitizeBase64Image(authData.user.profilePicture),
+            role: authData.user.role || 'user' // Ensure role is included
           });
         } else {
           setUser(null);
@@ -138,6 +141,11 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     return !!(user?.profilePicture && !imageError);
   };
 
+  //Check if user is admin
+  const isAdmin = () => {
+    return user?.role === 'admin';
+  };
+
   //Profile Avatar Component
   const ProfileAvatar = ({ size = 'w-8 h-8', textSize = 'text-sm' }: { size?: string, textSize?: string }) => {
     if (hasValidProfilePicture()) {
@@ -155,6 +163,57 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
       <div className={`${size} bg-blue-600 text-white rounded-full flex items-center justify-center ${textSize} font-medium`}>
         {getUserInitials(user!.name)}
       </div>
+    );
+  };
+
+  // Navigation Items Component - renders different items based on user role
+  const NavigationItems = ({ isMobile = false }: { isMobile?: boolean }) => {
+    const baseClasses = isMobile 
+      ? "text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors"
+      : "text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors";
+
+    const handleClick = () => {
+      if (isMobile) setIsMenuOpen(false);
+    };
+
+    // Always show regular navigation items
+    const regularItems = (
+      <>
+        <Link href="/" className={baseClasses} onClick={handleClick}>
+          Home
+        </Link>
+        <Link href="/Academics" className={baseClasses} onClick={handleClick}>
+          Academics
+        </Link>
+        <Link href="/Capstone" className={baseClasses} onClick={handleClick}>
+          Capstone
+        </Link>
+        <Link href="/AiModel" className={baseClasses} onClick={handleClick}>
+          Ai Model
+        </Link>
+        <Link href="/Chess" className={baseClasses} onClick={handleClick}>
+          Chess
+        </Link>
+      </>
+    );
+
+    // Admin gets additional items
+    const adminItems = isAdmin() ? (
+      <>
+        <Link href="/SiteDataLogs" className={baseClasses} onClick={handleClick}>
+          SiteDataLogs
+        </Link>
+        <Link href="/Userstatus" className={baseClasses} onClick={handleClick}>
+          UserStatus
+        </Link>
+      </>
+    ) : null;
+
+    return (
+      <>
+        {regularItems}
+        {adminItems}
+      </>
     );
   };
 
@@ -178,21 +237,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
           {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Home
-            </Link>
-            <Link href="/Academics" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Academics
-            </Link>
-            <Link href="/Capstone" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Capstone
-            </Link>
-            <Link href="/AiModel" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Ai Model
-            </Link>
-            <Link href="/Chess" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-              Chess
-            </Link>
+            <NavigationItems />
           </nav>
 
           {/* Auth Section */}
@@ -208,7 +253,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                   className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1 relative z-50"
                 >
                   <ProfileAvatar />
-                  <span className="hidden lg:block text-sm font-medium">{user.name}</span>
+                  <span className="hidden lg:block text-sm font-medium">
+                    {user.name}
+                    {isAdmin() && <span className="ml-1 text-xs text-blue-600">(Admin)</span>}
+                  </span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -269,41 +317,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-lg" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
-            <Link 
-              href="/" 
-              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/Academics" 
-              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Academics
-            </Link>
-            <Link 
-              href="/Capstone" 
-              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Capstone
-            </Link>
-            <Link 
-              href="/AiModel" 
-              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Ai Model
-            </Link>
-            <Link 
-              href="/Chess" 
-              className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Chess
-            </Link>
+            <NavigationItems isMobile={true} />
             
             {/* Mobile auth section */}
             {user ? (
@@ -314,7 +328,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                       <ProfileAvatar />
                     </div>
                     <div>
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
+                      <div className="text-base font-medium text-gray-800">
+                        {user.name}
+                        {isAdmin() && <span className="ml-1 text-xs text-blue-600">(Admin)</span>}
+                      </div>
                       <div className="text-sm text-gray-500">{user.email}</div>
                     </div>
                   </div>
