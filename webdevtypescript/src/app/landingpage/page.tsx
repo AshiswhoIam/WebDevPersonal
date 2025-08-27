@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Header from '../Components/header';
 import Footer from '../Components/footer';
 import React from 'react';

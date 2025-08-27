@@ -197,7 +197,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
       </>
     );
 
-    // Admin gets additional items
+    //Admin gets additional items
     const adminItems = isAdmin() ? (
       <>
         <Link href="/SiteDataLogs" className={baseClasses} onClick={handleClick}>
@@ -205,6 +205,9 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         </Link>
         <Link href="/Userstatus" className={baseClasses} onClick={handleClick}>
           UserStatus
+        </Link>
+        <Link href="/TempAdmin" className={baseClasses} onClick={handleClick}>
+          TempAdmin
         </Link>
       </>
     ) : null;
