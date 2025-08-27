@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/header';
 
-//Types
+//Types matching your actual API responses
 interface AnalyticsStats {
   totalViews: number;
   uniqueVisitors: number;
@@ -10,6 +10,10 @@ interface AnalyticsStats {
   avgSessionDuration: string;
   topPages: string[];
   activeUsers: number;
+  registeredUsers: number;
+  anonymousUsers: number;
+  registeredPercentage: number;
+  anonymousPercentage: number;
 }
 
 interface PageView {
@@ -41,14 +45,14 @@ interface AnalyticsData {
   userActivities: UserActivity[];
 }
 
-// API function
-const fetchAnalyticsData = async (): Promise<AnalyticsData> => {
-  const response = await fetch('/api/analytics/stats', {
+//API functions
+const fetchAnalyticsData = async (timeRange: string = '7d'): Promise<AnalyticsData> => {
+  const response = await fetch(`/api/analytics/stats?range=${timeRange}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include', // Include cookies for authentication
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -63,18 +67,19 @@ const AnalyticsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [timeRange, setTimeRange] = useState('7d');
   const [data, setData] = useState<AnalyticsData | null>(null);
 
   useEffect(() => {
     loadAnalyticsData();
-  }, []);
+  }, [timeRange]);
 
   const loadAnalyticsData = async () => {
     try {
       setIsLoading(true);
       setError('');
       
-      const analyticsData = await fetchAnalyticsData();
+      const analyticsData = await fetchAnalyticsData(timeRange);
       setData(analyticsData);
     } catch (error: any) {
       console.error('Failed to load analytics:', error);
@@ -89,23 +94,20 @@ const AnalyticsPage = () => {
     return new Intl.NumberFormat().format(num);
   };
 
-  const getActivityIcon = (type: string) => {
-    return type === 'registered' ? (
-      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-    ) : (
-      <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-    );
+  const getTimeRangeLabel = (range: string): string => {
+    switch (range) {
+      case '1d': return 'Last 24 Hours';
+      case '7d': return 'Last 7 Days';
+      case '30d': return 'Last 30 Days';
+      case '90d': return 'Last 90 Days';
+      default: return 'Last 7 Days';
+    }
   };
 
   const filteredPageViews = data?.pageViews?.filter(page =>
     page.page.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  const safeBounceRateValue = (bounceRate: string): number => {
-    const numericValue = parseFloat(bounceRate.replace('%', ''));
-    return isNaN(numericValue) ? 0 : numericValue;
-  };
-//maybe i remove bounce rate later if notusing
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
@@ -148,7 +150,11 @@ const AnalyticsPage = () => {
       signUps: 0,
       avgSessionDuration: '0s',
       topPages: [],
-      activeUsers: 0
+      activeUsers: 0,
+      registeredUsers: 0,
+      anonymousUsers: 0,
+      registeredPercentage: 0,
+      anonymousPercentage: 0
     },
     pageViews: [],
     userActivities: []
@@ -170,6 +176,35 @@ const AnalyticsPage = () => {
               <h1 className="text-3xl font-bold text-white mb-2">Site Data Logs</h1>
               <p className="text-gray-300">Track page views, user activity, and website performance</p>
             </div>
+            
+            {/* Time Range Selector */}
+            <div className="flex items-center space-x-4">
+              <select
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value)}
+                className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none [&>option]:bg-slate-800 [&>option]:text-white"
+              >
+                <option value="1d" className="bg-slate-800 text-white">Last 24 Hours</option>
+                <option value="7d" className="bg-slate-800 text-white">Last 7 Days</option>
+                <option value="30d" className="bg-slate-800 text-white">Last 30 Days</option>
+                <option value="90d" className="bg-slate-800 text-white">Last 90 Days</option>
+              </select>
+              
+              <button
+                onClick={loadAnalyticsData}
+                disabled={isLoading}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center space-x-2"
+              >
+                <svg className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
+              </button>
+            </div>
+          </div>
+          
+          <div className="text-sm text-gray-400">
+            Showing data for: {getTimeRangeLabel(timeRange)}
           </div>
         </div>
 
@@ -221,8 +256,9 @@ const AnalyticsPage = () => {
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-300 text-sm">Sign Ups</p>
+                <p className="text-gray-300 text-sm">New Sign Ups</p>
                 <p className="text-white text-2xl font-bold">{formatNumber(displayData.stats.signUps)}</p>
+                <p className="text-xs text-gray-400 mt-1">{getTimeRangeLabel(timeRange)}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,6 +273,7 @@ const AnalyticsPage = () => {
               <div>
                 <p className="text-gray-300 text-sm">Active Users</p>
                 <p className="text-white text-2xl font-bold">{formatNumber(displayData.stats.activeUsers)}</p>
+                <p className="text-xs text-gray-400 mt-1">Last 30 minutes</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -277,18 +314,22 @@ const AnalyticsPage = () => {
                     <tr className="border-b border-white/10">
                       <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Page</th>
                       <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Views</th>
+                      <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Unique</th>
                       <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Clicks</th>
                       <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Registered</th>
                       <th className="text-left py-3 px-6 text-gray-300 text-sm font-medium">Anonymous</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPageViews.length > 0 ? filteredPageViews.map((page, index) => (
+                    {filteredPageViews.length > 0 ? filteredPageViews.map((page) => (
                       <tr key={page.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                         <td className="py-4 px-6">
-                          <span className="text-white font-medium">{page.page}</span>
+                          <span className="text-white font-medium truncate max-w-xs block" title={page.page}>
+                            {page.page}
+                          </span>
                         </td>
                         <td className="py-4 px-6 text-gray-300">{formatNumber(page.views)}</td>
+                        <td className="py-4 px-6 text-gray-300">{formatNumber(page.uniqueVisitors)}</td>
                         <td className="py-4 px-6 text-gray-300">{formatNumber(page.totalClicks || 0)}</td>
                         <td className="py-4 px-6">
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-300">
@@ -303,7 +344,7 @@ const AnalyticsPage = () => {
                       </tr>
                     )) : (
                       <tr>
-                        <td colSpan={5} className="py-8 px-6 text-center text-gray-400">
+                        <td colSpan={6} className="py-8 px-6 text-center text-gray-400">
                           {searchTerm ? 'No pages found matching your search' : 'No page data available'}
                         </td>
                       </tr>
@@ -333,7 +374,7 @@ const AnalyticsPage = () => {
                       stroke="rgba(255, 255, 255, 0.1)"
                       strokeWidth="8"
                     />
-                    {/* Anonymous Users Arc (70%) */}
+                    {/* Anonymous Users Arc */}
                     <circle
                       cx="50"
                       cy="50"
@@ -341,11 +382,11 @@ const AnalyticsPage = () => {
                       fill="none"
                       stroke="rgb(156, 163, 175)"
                       strokeWidth="8"
-                      strokeDasharray={`${Math.PI * 2 * 40 * 0.7} ${Math.PI * 2 * 40}`}
+                      strokeDasharray={`${Math.PI * 2 * 40 * (displayData.stats.anonymousPercentage / 100)} ${Math.PI * 2 * 40}`}
                       strokeDashoffset="0"
                       strokeLinecap="round"
                     />
-                    {/* Registered Users Arc (30%) */}
+                    {/* Registered Users Arc */}
                     <circle
                       cx="50"
                       cy="50"
@@ -353,16 +394,16 @@ const AnalyticsPage = () => {
                       fill="none"
                       stroke="rgb(59, 130, 246)"
                       strokeWidth="8"
-                      strokeDasharray={`${Math.PI * 2 * 40 * 0.3} ${Math.PI * 2 * 40}`}
-                      strokeDashoffset={`-${Math.PI * 2 * 40 * 0.7}`}
+                      strokeDasharray={`${Math.PI * 2 * 40 * (displayData.stats.registeredPercentage / 100)} ${Math.PI * 2 * 40}`}
+                      strokeDashoffset={`-${Math.PI * 2 * 40 * (displayData.stats.anonymousPercentage / 100)}`}
                       strokeLinecap="round"
                     />
                   </svg>
                   
                   {/* Center Text */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-xl font-bold text-white">{formatNumber(displayData.stats.totalViews)}</span>
-                    <span className="text-xs text-gray-300">Total Views</span>
+                    <span className="text-xl font-bold text-white">{formatNumber(displayData.stats.uniqueVisitors)}</span>
+                    <span className="text-xs text-gray-300">Unique Users</span>
                   </div>
                 </div>
                 
@@ -374,8 +415,8 @@ const AnalyticsPage = () => {
                       <span className="text-white text-sm font-medium">Registered</span>
                     </div>
                     <div className="text-right">
-                      <div className="text-white font-semibold">{formatNumber(Math.floor(displayData.stats.totalViews * 0.3))}</div>
-                      <div className="text-gray-400 text-xs">30%</div>
+                      <div className="text-white font-semibold">{formatNumber(displayData.stats.registeredUsers)}</div>
+                      <div className="text-gray-400 text-xs">{displayData.stats.registeredPercentage}%</div>
                     </div>
                   </div>
                   
@@ -385,8 +426,8 @@ const AnalyticsPage = () => {
                       <span className="text-white text-sm font-medium">Anonymous</span>
                     </div>
                     <div className="text-right">
-                      <div className="text-white font-semibold">{formatNumber(Math.floor(displayData.stats.totalViews * 0.7))}</div>
-                      <div className="text-gray-400 text-xs">70%</div>
+                      <div className="text-white font-semibold">{formatNumber(displayData.stats.anonymousUsers)}</div>
+                      <div className="text-gray-400 text-xs">{displayData.stats.anonymousPercentage}%</div>
                     </div>
                   </div>
                 </div>
@@ -407,7 +448,7 @@ const AnalyticsPage = () => {
                           <span className="text-white font-bold text-sm">#{index + 1}</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-white text-sm font-medium truncate">
+                          <div className="text-white text-sm font-medium truncate" title={page}>
                             {page}
                           </div>
                           <div className="text-gray-400 text-xs">
@@ -425,6 +466,35 @@ const AnalyticsPage = () => {
                     <div>No page data available</div>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Quick Stats Summary */}
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6">
+              <h2 className="text-xl font-semibold text-white mb-4">Summary</h2>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-white/10">
+                  <span className="text-gray-300">Total Pages Tracked</span>
+                  <span className="text-white font-medium">{displayData.pageViews.length}</span>
+                </div>
+                
+                <div className="flex justify-between items-center py-2 border-b border-white/10">
+                  <span className="text-gray-300">Avg. Views per Page</span>
+                  <span className="text-white font-medium">
+                    {displayData.pageViews.length > 0 
+                      ? formatNumber(Math.round(displayData.stats.totalViews / displayData.pageViews.length))
+                      : '0'
+                    }
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-300">Total Clicks Tracked</span>
+                  <span className="text-white font-medium">
+                    {formatNumber(displayData.pageViews.reduce((sum, page) => sum + (page.totalClicks || 0), 0))}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

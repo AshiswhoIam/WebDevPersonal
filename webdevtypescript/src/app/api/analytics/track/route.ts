@@ -1,3 +1,4 @@
+// /api/analytics/track/route.ts - FIXED VERSION
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import clientPromise from '../../../../../backend/lib/mongodb';
@@ -10,7 +11,6 @@ interface TrackingData {
   isFirstVisitToPage?: boolean;
 }
 
-//Initialize TTL index on first run
 let ttlIndexCreated = false;
 
 export async function POST(req: NextRequest) {
@@ -29,19 +29,18 @@ export async function POST(req: NextRequest) {
     const pageStats = db.collection('page_stats');
     const uniqueVisitors = db.collection('unique_visitors');
 
-    //Create TTL index on first run (expires documents after 1 hours)
+    //Create TTL index on first run (expires documents after 1 hour)
     if (!ttlIndexCreated) {
       try {
         await uniqueVisitors.createIndex(
           { "lastVisit": 1 }, 
           { 
-            expireAfterSeconds: 3600, // 1 hours in seconds
+            expireAfterSeconds: 3600, // 1 hour in seconds
             name: "ttl_lastVisit_1h"
           }
         );
         ttlIndexCreated = true;
       } catch (error) {
-        //Index might already exist, that's fine
         console.log('TTL index creation note:', error);
       }
     }
@@ -57,63 +56,90 @@ export async function POST(req: NextRequest) {
         userId = decoded.userId;
         isRegistered = true;
       } catch (error) {
-        //User not authenticated, continue as anonymous
+        // User not authenticated, continue as anonymous
       }
     }
 
-    //For unique visitor tracking, we need to track sessions
     const sessionId = trackingData.sessionId || 'unknown';
     const visitorKey = isRegistered ? `user_${userId}` : `session_${sessionId}`;
     
-    //Only count as unique if this is their first visit to ANY page in the last 24 hours
     let shouldCountAsUniqueVisitor = false;
     
+    // ONLY count as unique visitor if:
+    // 1. This is an initial view (not a click update)
+    // 2. This is their first visit to this specific page in this session
+    // 3. They haven't visited ANY page in the last hour (TTL period)
     if (trackingData.isInitialView && trackingData.isFirstVisitToPage) {
-      //Check if this visitor has visited ANY page in the last 24 hours
-      const hasVisitedAnyPageToday = await uniqueVisitors.findOne({
+      const hasVisitedAnyPageRecently = await uniqueVisitors.findOne({
         visitorKey: visitorKey,
-        lastVisit: { $gte: new Date(Date.now() - 86400000) } // 24 hours ago
+        lastVisit: { $gte: new Date(Date.now() - 3600000) } // 1 hour ago
       });
       
-      if (!hasVisitedAnyPageToday) {
+      if (!hasVisitedAnyPageRecently) {
         shouldCountAsUniqueVisitor = true;
         
-        //Record this visitor - TTL will auto-delete after 24 hours
+        //Record this visitor visit
         await uniqueVisitors.insertOne({
           page: trackingData.page,
           visitorKey: visitorKey,
           isRegistered: isRegistered,
           userId: userId,
           sessionId: sessionId,
-          lastVisit: new Date() // TTL index uses this field for expiration
+          lastVisit: new Date()
         });
       } else {
-        // Update the lastVisit time to reset the TTL countdown
-        // But don't count as a new unique visitor
+        //Update the lastVisit time to reset TTL countdown
         await uniqueVisitors.updateOne(
           { visitorKey: visitorKey },
-          { $set: { lastVisit: new Date() } }
+          { 
+            $set: { 
+              lastVisit: new Date(),
+              page: trackingData.page //Update current page
+            } 
+          }
         );
       }
     }
 
-    //Update page statistics
-    const updateData = {
-      $inc: {
-        totalViews: 1, // Always increment views
-        totalClicks: trackingData.totalClicks || 0,
-        // Only increment unique user counts for actual unique visitors (first visit in 24h)
-        registeredUsers: (shouldCountAsUniqueVisitor && isRegistered) ? 1 : 0,
-        anonymousUsers: (shouldCountAsUniqueVisitor && !isRegistered) ? 1 : 0
-      },
-      $set: {
-        lastUpdated: new Date()
-      },
-      $setOnInsert: {
-        page: trackingData.page,
-        createdAt: new Date()
-      }
-    };
+    // Build the update query
+    let updateData: any;
+
+    if (trackingData.isInitialView) {
+      // This is an initial page view  increment views and potentially unique users
+      updateData = {
+        $set: {
+          lastUpdated: new Date()
+        },
+        $setOnInsert: {
+          page: trackingData.page,
+          createdAt: new Date()
+        },
+        $inc: {
+          totalViews: 1,
+          totalClicks: trackingData.totalClicks || 0,
+          // Only count unique users for actual unique visitors
+          registeredUsers: (shouldCountAsUniqueVisitor && isRegistered) ? 1 : 0,
+          anonymousUsers: (shouldCountAsUniqueVisitor && !isRegistered) ? 1 : 0
+        }
+      };
+    } else {
+      //This is just a click update  only increment clicks
+      updateData = {
+        $set: {
+          lastUpdated: new Date()
+        },
+        $setOnInsert: {
+          page: trackingData.page,
+          createdAt: new Date(),
+          totalViews: 0,
+          registeredUsers: 0,
+          anonymousUsers: 0
+        },
+        $inc: {
+          totalClicks: trackingData.totalClicks || 0
+        }
+      };
+    }
 
     await pageStats.updateOne(
       { page: trackingData.page },
@@ -126,7 +152,9 @@ export async function POST(req: NextRequest) {
       debug: {
         shouldCountAsUniqueVisitor,
         isRegistered,
-        visitorKey: visitorKey.substring(0, 20) + '...' // Truncated for privacy
+        isInitialView: trackingData.isInitialView,
+        isFirstVisitToPage: trackingData.isFirstVisitToPage,
+        visitorKey: visitorKey.substring(0, 20) + '...'
       }
     }, { status: 200 });
 

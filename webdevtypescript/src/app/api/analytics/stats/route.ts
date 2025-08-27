@@ -1,4 +1,4 @@
-//webdevtypescript\src\app\api\analytics\stats\route.ts
+// /api/analytics/stats/route.ts - UPDATED VERSION
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
     //Get all page stats
     const allPageStats = await pageStats.find({}).sort({ totalViews: -1 }).toArray();
 
-    //Calculate totals
+    //Calculate totals correctly
     const totalViews = allPageStats.reduce((sum, page) => sum + (page.totalViews || 0), 0);
     const totalRegistered = allPageStats.reduce((sum, page) => sum + (page.registeredUsers || 0), 0);
     const totalAnonymous = allPageStats.reduce((sum, page) => sum + (page.anonymousUsers || 0), 0);
@@ -79,10 +79,10 @@ export async function GET(req: NextRequest) {
       createdAt: { $gte: startDate }
     });
 
-    //Get currently online users 
+    //Get currently active users (last 30 minutes)
     const activeUsers = await users.countDocuments({
       status: 'online',
-      lastLogin: { $gte: new Date(Date.now() - 30 * 60 * 1000) } // Active in last 30 minutes
+      lastLogin: { $gte: new Date(Date.now() - 30 * 60 * 1000) }
     });
 
     //Format page views for display
@@ -91,18 +91,22 @@ export async function GET(req: NextRequest) {
       page: page.page,
       views: page.totalViews || 0,
       uniqueVisitors: (page.registeredUsers || 0) + (page.anonymousUsers || 0),
-      avgTimeSpent: '0s', // Simplified - no time tracking
-      bounceRate: '0%', // Simplified - no bounce tracking
+      avgTimeSpent: '0s', // Simplified
+      bounceRate: '0%', // Simplified
       totalClicks: page.totalClicks || 0,
       registeredUsers: page.registeredUsers || 0,
       anonymousUsers: page.anonymousUsers || 0
     }));
 
-    //Get top pages 
+    //Get top pages (by views, not by unique visitors)
     const topPages = allPageStats
       .sort((a, b) => (b.totalViews || 0) - (a.totalViews || 0))
       .slice(0, 5)
       .map(page => page.page);
+
+    // Calculate proper percentages for user distribution
+    const registeredPercentage = uniqueVisitors > 0 ? Math.round((totalRegistered / uniqueVisitors) * 100) : 0;
+    const anonymousPercentage = uniqueVisitors > 0 ? Math.round((totalAnonymous / uniqueVisitors) * 100) : 0;
 
     return NextResponse.json({
       stats: {
@@ -111,10 +115,15 @@ export async function GET(req: NextRequest) {
         signUps,
         avgSessionDuration: '0s', // Simplified
         topPages,
-        activeUsers
+        activeUsers,
+        // Additional stats for better frontend display
+        registeredUsers: totalRegistered,
+        anonymousUsers: totalAnonymous,
+        registeredPercentage,
+        anonymousPercentage
       },
       pageViews: formattedPageViews,
-      userActivities: [] // Simplified - no live activities
+      userActivities: [] // Simplified
     }, { status: 200 });
 
   } catch (error) {
