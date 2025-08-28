@@ -226,7 +226,7 @@ const ProfilePage = () => {
                 </div>
                 
                 <p className="text-sm text-gray-500">
-                  Supported formats: JPG, PNG, GIF, WebP. Maximum file size: 3MB (optimized for database storage).
+                  Supported formats: JPG, PNG, GIF, Please compress your image to be optimized for database storage.
                 </p>
               </div>
             </div>

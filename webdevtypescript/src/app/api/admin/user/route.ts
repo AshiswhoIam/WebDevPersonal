@@ -26,6 +26,38 @@ const verifyAdminToken = async (request: NextRequest) => {
   }
 };
 
+//Helper function to clean up inactive users
+const cleanupInactiveUsers = async () => {
+  try {
+    const client = await clientPromise;
+    const users = client.db('Webdev').collection('info');
+    
+    //Calculate 1 minute ago
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
+    
+    //Mark non-admin users as offline if their lastLogin is over 1 min old
+    const result = await users.updateMany(
+      { 
+        status: 'online',
+        role: { $ne: 'admin' }, // Exclude admins
+        lastLogin: { $lt: oneMinuteAgo }
+      },
+      { 
+        $set: { 
+          status: 'offline',
+          updatedAt: new Date()
+        }
+      }
+    );
+
+    console.log(`Auto-cleanup: Marked ${result.modifiedCount} users as offline`);
+    return result.modifiedCount;
+  } catch (error) {
+    console.error('Cleanup error:', error);
+    return 0;
+  }
+};
+
 //Retrieve all users for admin management
 export async function GET(req: NextRequest) {
   try {
@@ -37,12 +69,15 @@ export async function GET(req: NextRequest) {
       }, { status: 403 });
     }
 
+    //Run cleanup before fetching users
+    const cleanedUpCount = await cleanupInactiveUsers();
+
     //Connect to MongoDB
     const client = await clientPromise;
     const db = client.db('Webdev');
     const users = db.collection('info');
 
-    //Get all users
+    //Get all users (after cleanup)
     const allUsers = await users.find(
       {}, 
       { 
@@ -65,7 +100,11 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({
-      users: formattedUsers
+      users: formattedUsers,
+      cleanupInfo: {
+        usersMarkedOffline: cleanedUpCount,
+        cleanupTime: new Date().toISOString()
+      }
     }, { status: 200 });
 
   } catch (error) {
